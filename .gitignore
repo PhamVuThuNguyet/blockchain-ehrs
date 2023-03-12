@@ -1,0 +1,5 @@
+sample-scripts
+*.lock
+*/.gradle/*
+bin/
+node_modules/

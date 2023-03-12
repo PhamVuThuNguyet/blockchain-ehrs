@@ -1,0 +1,26 @@
+[
+    {
+        "hospitalId": "1",
+        "firstName": "John",
+        "lastName": "Wick",
+        "speciality": "Neurosurgery"
+    },
+    {
+        "hospitalId": "2",
+        "firstName": "Bill",
+        "lastName": "Clinton",
+        "speciality": "Cardiology"
+    },
+    {
+        "hospitalId": "1",
+        "firstName": "George",
+        "lastName": "Bush",
+        "speciality": "Cardiology"
+    },
+    {
+        "hospitalId": "2",
+        "firstName": "Keanu",
+        "lastName": "Reeves",
+        "speciality": "Neurosurgery"
+    }
+]
