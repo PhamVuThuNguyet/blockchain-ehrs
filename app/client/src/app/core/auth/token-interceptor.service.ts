@@ -60,7 +60,7 @@ export class TokenInterceptorService implements HttpInterceptor {
         tap(() => {
           console.log('Access Token Refreshed!');
           this.refreshTokenInProgress = false;
-          this.accessTokenRefreshed.next();
+          this.accessTokenRefreshed.next(0);
         })
       );
     }

@@ -3,3 +3,4 @@ sample-scripts
 */.gradle/*
 bin/
 node_modules/
+.angular
