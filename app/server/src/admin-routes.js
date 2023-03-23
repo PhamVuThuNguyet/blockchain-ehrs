@@ -6,8 +6,9 @@
  */
 
 // Bring common classes into scope, and Fabric SDK network class
-const {ROLE_ADMIN, ROLE_DOCTOR, capitalize, getMessage, validateRole, createRedisClient} = require('../utils.js');
+const { ROLE_ADMIN, ROLE_DOCTOR, capitalize, getMessage, validateRole, createRedisClient } = require('../utils.js');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
+const pinata = require('./utils/pinata');
 
 /**
  * @param  {Request} req Body must be a patient json and role in the header
@@ -39,18 +40,25 @@ exports.createPatient = async (req, res) => {
   // The request present in the body is converted into a single json string
   const data = JSON.stringify(req.body);
   const args = [data];
+  const pinataData = await pinata.upload(data, 'patient');
+  // TODO: encrypt pinataData.IpfsHash and save to blockchain
   // Invoke the smart contract function
   const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', args);
   if (createPatientRes.error) {
-    res.status(400).send(response.error);
+    res.status(400).send(createPatientRes.error);
+    return;
   }
 
   // Enrol and register the user with the CA and adds the user to the wallet.
-  const userData = JSON.stringify({hospitalId: (req.headers.username).slice(4, 5), userId: req.body.patientId});
+  const userData = JSON.stringify({
+    hospitalId: req.headers.username.slice(4, 5),
+    userId: req.body.patientId,
+  });
   const registerUserRes = await network.registerUser(userData);
   if (registerUserRes.error) {
     await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
     res.send(registerUserRes.error);
+    return;
   }
 
   res.status(201).send(getMessage(false, 'Successfully registered Patient.', req.body.patientId, req.body.password));
@@ -64,7 +72,7 @@ exports.createPatient = async (req, res) => {
 exports.createDoctor = async (req, res) => {
   // User role from the request header is validated
   const userRole = req.headers.role;
-  let {hospitalId, username, password} = req.body;
+  let { hospitalId, username, password } = req.body;
   hospitalId = parseInt(hospitalId);
 
   await validateRole([ROLE_ADMIN], userRole, res);
@@ -97,8 +105,67 @@ exports.getAllPatients = async (req, res) => {
   // Set up and connect to Fabric Gateway using the username in header
   const networkObj = await network.connectToNetwork(req.headers.username);
   // Invoke the smart contract function
-  const response = await network.invoke(networkObj, true, capitalize(userRole) + 'Contract:queryAllPatients',
-    userRole === ROLE_DOCTOR ? req.headers.username : '');
+  // eslint-disable-next-line max-len
+  const response = await network.invoke(networkObj, true, capitalize(userRole) + 'Contract:queryAllPatients', userRole === ROLE_DOCTOR ? req.headers.username : '');
   const parsedResponse = await JSON.parse(response);
+  // console.log(parsedResponse);
+  // const responseData = [
+  //   {
+  //     patientId: 'PID0',
+  //     firstName: 'Monica',
+  //     lastName: 'Latte',
+  //     phoneNumber: '+4912345678',
+  //     emergPhoneNumber: '+4912345678',
+  //   },
+  //   {
+  //     patientId: 'PID1',
+  //     firstName: 'Max',
+  //     lastName: 'Mustermann',
+  //     phoneNumber: '+491764561111',
+  //     emergPhoneNumber: '+491764561113',
+  //   },
+  //   {
+  //     patientId: 'PID2',
+  //     firstName: 'Johannes',
+  //     lastName: 'Schmidt',
+  //     phoneNumber: '+491764561111',
+  //     emergPhoneNumber: '+491764561113',
+  //   },
+  //   {
+  //     patientId: 'PID3',
+  //     firstName: 'Torben',
+  //     lastName: 'Klaproth',
+  //     phoneNumber: '+491764561111',
+  //     emergPhoneNumber: '+491764561113',
+  //   },
+  //   {
+  //     patientId: 'PID4',
+  //     firstName: 'Lisa',
+  //     lastName: 'Eckel',
+  //     phoneNumber: '+491764561179',
+  //     emergPhoneNumber: '+491764567913',
+  //   },
+  //   {
+  //     patientId: 'PID5',
+  //     firstName: 'Harry',
+  //     lastName: 'Schumann',
+  //     phoneNumber: '+491764561156',
+  //     emergPhoneNumber: '+491764589113',
+  //   },
+  //   {
+  //     patientId: 'PID6',
+  //     firstName: 'Ho',
+  //     lastName: 'Phong',
+  //     phoneNumber: '0123123123',
+  //     emergPhoneNumber: '0123123123',
+  //   },
+  //   {
+  //     patientId: 'PID7',
+  //     firstName: 'Ho',
+  //     lastName: 'Phong',
+  //     phoneNumber: '0123123123',
+  //     emergPhoneNumber: '0123123123',
+  //   },
+  // ];
   res.status(200).send(parsedResponse);
 };
