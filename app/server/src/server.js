@@ -5,7 +5,7 @@
  * @desc NodeJS APIs to interact with the fabric network.
  * @desc Look into API docs for the documentation of the routes
  */
-
+require('dotenv').config();
 
 // Classes for Node Express
 const express = require('express');
@@ -75,7 +75,7 @@ const authenticateJWT = (req, res, next) => {
  * @description Generates a new accessToken
  */
 function generateAccessToken(username, role) {
-  return jwt.sign({username: username, role: role}, jwtSecretToken, {expiresIn: '5m'});
+  return jwt.sign({username: username, role: role}, jwtSecretToken, {expiresIn: process.env.JWT_EXPIRES_IN});
 }
 
 /**
