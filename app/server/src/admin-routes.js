@@ -43,7 +43,7 @@ exports.createPatient = async (req, res) => {
   const pinataData = await pinata.upload(data, 'patient');
   // TODO: encrypt pinataData.IpfsHash and save to blockchain
   // Invoke the smart contract function
-  const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', args);
+  const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', [{ ipfs: pinataData.IpfsHash }]);
   if (createPatientRes.error) {
     res.status(400).send(createPatientRes.error);
     return;
