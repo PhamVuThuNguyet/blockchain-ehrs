@@ -22,6 +22,7 @@ class AdminContract extends PrimaryContract {
 
     //Create patient in the ledger
     async createPatient(ctx, args) {
+        console.log(args);
         args = JSON.parse(args);
 
         if (args.password === null || args.password === '') {
