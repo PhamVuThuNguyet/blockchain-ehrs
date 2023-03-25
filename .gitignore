@@ -4,3 +4,5 @@ sample-scripts
 bin/
 node_modules/
 .angular
+app/server/package-lock.json
+app/client/package-lock.json
