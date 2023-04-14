@@ -11,16 +11,21 @@
 let Patient = require('./Patient.js');
 const PrimaryContract = require('./primary-contract.js');
 
+
 class AdminContract extends PrimaryContract {
 
     //Returns the last patientId in the set
     async getLatestPatientId(ctx) {
         let allResults = await this.queryAllPatients(ctx);
-
         return allResults[allResults.length - 1].patientId;
     }
 
-    //Create patient in the ledger
+    /**
+     * Create patient in the ledger
+     * @param {*} ctx 
+     * @param {object} args {patientId, citizenId, firstName, lastName, password, sex, birth,
+     *                       phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl}
+     */
     async createPatient(ctx, args) {
         console.log(args);
         args = JSON.parse(args);
@@ -29,12 +34,14 @@ class AdminContract extends PrimaryContract {
             throw new Error(`Empty or null values should not be passed for password parameter`);
         }
 
-        let newPatient = await new Patient(args.patientId, args.firstName, args.lastName, args.password, args.age,
-            args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.changedBy, args.allergies);
+        let newPatient = await new Patient(args.patientId, args.citizenId, args.firstName, args.lastName, args.password,
+            args.sex, args.birth, args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.ipfsHash);
+
         const exists = await this.patientExists(ctx, newPatient.patientId);
         if (exists) {
             throw new Error(`The patient ${newPatient.patientId} already exists`);
         }
+
         const buffer = Buffer.from(JSON.stringify(newPatient));
         await ctx.stub.putState(newPatient.patientId, buffer);
     }
@@ -45,10 +52,19 @@ class AdminContract extends PrimaryContract {
 
         asset = ({
             patientId: patientId,
+            citizenId: asset.citizenId,
             firstName: asset.firstName,
             lastName: asset.lastName,
+            sex: asset.sex,
+            birth: asset.birth,
             phoneNumber: asset.phoneNumber,
-            emergPhoneNumber: asset.emergPhoneNumber
+            emergPhoneNumber: asset.emergPhoneNumber,
+            address: asset.address,
+            bloodGroup: asset.bloodGroup,
+            permissionGranted: asset.permissionGranted,
+            password: asset.password,
+            pwdTemp: asset.pwdTemp,
+            ehr: asset.ehr
         });
         return asset;
     }

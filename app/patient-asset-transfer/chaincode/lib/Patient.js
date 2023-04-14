@@ -6,12 +6,12 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  */
-
+'use strict';
 const crypto = require('crypto');
 
 class Patient {
 
-    constructor(patientId, citizenId, firstName, lastName, password, sex, birth, phoneNumber, emergPhoneNumber, address, bloodGroup) {
+    constructor(patientId, citizenId, firstName, lastName, password, sex, birth, phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl) {
         this.patientId = patientId;
         this.citizenId = citizenId;
         this.firstName = firstName;
@@ -25,8 +25,8 @@ class Patient {
         this.bloodGroup = bloodGroup;
         this.pwdTemp = true;
         this.permissionGranted = [];
-        this.ehr = null;
+        this.ehr = ehrUrl;
         return this;
-    };
+    }
 }
-module.exports = Patient
+module.exports = Patient;
