@@ -5,11 +5,11 @@
  */
 
 
-const {Gateway, Wallets} = require('fabric-network');
+const { Gateway, Wallets } = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
 const path = require('path');
-const {buildCAClient, registerAndEnrollUser} = require('./CAUtil.js');
-const {buildCCPHosp3, buildCCPHosp2, buildCCPHosp1, buildWallet} = require('./AppUtil.js');
+const { buildCAClient, registerAndEnrollUser } = require('./CAUtil.js');
+const { buildCCPHosp3, buildCCPHosp2, buildCCPHosp1, buildWallet } = require('./AppUtil.js');
 
 const channelName = 'hospitalchannel';
 const chaincodeName = 'patient';
@@ -26,7 +26,7 @@ const walletPath = path.join(__dirname, 'wallet');
  * @description Connects to the network using the username - doctorID, networkObj contains the paramters using which
  * @description a connection to the fabric network is possible.
  */
-exports.connectToNetwork = async function(doctorID) {
+exports.connectToNetwork = async function (doctorID) {
   const gateway = new Gateway();
   const ccp = buildCCPHosp1();
 
@@ -51,7 +51,7 @@ exports.connectToNetwork = async function(doctorID) {
     * signed by this user using the credentials stored in the wallet.
     */
     // using asLocalhost as this gateway is using a fabric network deployed locally
-    await gateway.connect(ccp, {wallet, identity: doctorID, discovery: {enabled: true, asLocalhost: true}});
+    await gateway.connect(ccp, { wallet, identity: doctorID, discovery: { enabled: true, asLocalhost: true } });
 
     // Build a network instance based on the channel where the smart contract is deployed
     const network = await gateway.getNetwork(channelName);
@@ -85,7 +85,7 @@ exports.connectToNetwork = async function(doctorID) {
  * @return {string} response error otherwise
  * @description A common function to interact with the ledger
  */
-exports.invoke = async function(networkObj, isQuery, func, args= '') {
+exports.invoke = async function (networkObj, isQuery, func, args = '') {
   try {
     if (isQuery === true) {
       const response = await networkObj.contract.evaluateTransaction(func, args);
@@ -114,7 +114,7 @@ exports.invoke = async function(networkObj, isQuery, func, args= '') {
  * @description For patient attributes also contain the patient object
  * @description Creates a patient/doctor and adds to the wallet to the given hospitalId
  */
-exports.registerUser = async function(attributes) {
+exports.registerUser = async function (attributes) {
   const attrs = JSON.parse(attributes);
   const hospitalId = parseInt(attrs.hospitalId);
   const userId = attrs.userId;
@@ -127,23 +127,23 @@ exports.registerUser = async function(attributes) {
 
   try {
     const wallet = await buildWallet(Wallets, walletPath);
+    let userAddress;
     // TODO: Must be handled in a config file instead of using if
     if (hospitalId === 1) {
       const ccp = buildCCPHosp1();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp1.neuralmed.com');
-      await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'hosp1admin', attributes);
+      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'hosp1admin', attributes);
     } else if (hospitalId === 2) {
       const ccp = buildCCPHosp2();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp2.neuralmed.com');
-      await registerAndEnrollUser(caClient, wallet, mspOrg2, userId, 'hosp2admin', attributes);
+      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg2, userId, 'hosp2admin', attributes);
     } else if (hospitalId === 3) {
       const ccp = buildCCPHosp3();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp3.neuralmed.com');
-      await registerAndEnrollUser(caClient, wallet, mspOrg3, userId, 'hosp3admin', attributes);
+      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg3, userId, 'hosp3admin', attributes);
     }
     console.log(`Successfully registered user: + ${userId}`);
-    const response = 'Successfully registered user: '+ userId;
-    return response;
+    return userAddress;
   } catch (error) {
     console.error(`Failed to register user + ${userId} + : ${error}`);
     const response = {};
@@ -158,7 +158,7 @@ exports.registerUser = async function(attributes) {
  * @return {JSON} Returns an JSON array consisting of all doctor object.
  * @description Retrieves all the users(doctors) based on user type(doctor) and hospitalId
  */
-exports.getAllDoctorsByHospitalId = async function(networkObj, hospitalId) {
+exports.getAllDoctorsByHospitalId = async function (networkObj, hospitalId) {
   // Get the User from the identity context
   const users = networkObj.gateway.identityContext.user;
   let caClient;
@@ -205,7 +205,7 @@ exports.getAllDoctorsByHospitalId = async function(networkObj, hospitalId) {
     return response;
   }
   return result.filter(
-    function(result) {
+    function (result) {
       return result.role === 'doctor';
     },
   );
