@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "nyc mocha --recursive",
+    "mocha": "mocha --recursive",
     "start": "fabric-chaincode-node start"
   },
   "engineStrict": true,
@@ -34,7 +35,8 @@
     "exclude": [
       ".eslintrc.js",
       "coverage/**",
-      "test/**"
+      "test/**",
+      "index.js"
     ],
     "reporter": [
       "text-summary",

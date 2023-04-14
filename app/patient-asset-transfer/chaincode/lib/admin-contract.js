@@ -1,7 +1,7 @@
 /**
  * @author Nguyetpvt
  * @email pvtnguyet.19it1@vku.udn.vn
- * @desc [Admin Smartcontract to create, read patient details in legder]
+ * @desc [Admin smart contract to create, read patient details in legder]
  */
 /*
  * SPDX-License-Identifier: Apache-2.0
