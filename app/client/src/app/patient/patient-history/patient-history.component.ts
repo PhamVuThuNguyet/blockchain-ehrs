@@ -23,7 +23,8 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
     new DisplayVal(PatientViewRecord.prototype.changedBy, 'Last changed by'),
     new DisplayVal(PatientViewRecord.prototype.firstName, 'First Name'),
     new DisplayVal(PatientViewRecord.prototype.lastName, 'Last Name'),
-    new DisplayVal(PatientViewRecord.prototype.age, 'Age'),
+    new DisplayVal(PatientViewRecord.prototype.sex, 'Sex'),
+    new DisplayVal(PatientViewRecord.prototype.birth, 'Birth'),
     new DisplayVal(PatientViewRecord.prototype.bloodGroup, 'Blood Group'),
   ];
 
@@ -42,11 +43,7 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
       );
     }
     this.headerNames.push(
-      new DisplayVal(PatientViewRecord.prototype.allergies, 'Allergies'),
-      new DisplayVal(PatientViewRecord.prototype.diagnosis, 'Diagnosis'),
-      new DisplayVal(PatientViewRecord.prototype.symptoms, 'Symptoms'),
-      new DisplayVal(PatientViewRecord.prototype.treatment, 'Treatment'),
-      new DisplayVal(PatientViewRecord.prototype.followUp, 'Followup duration')
+      new DisplayVal(PatientViewRecord.prototype.description, 'Description')
     );
     this.sub = this.route.params
       .subscribe((params: Params) => {

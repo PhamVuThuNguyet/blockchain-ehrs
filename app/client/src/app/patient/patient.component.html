@@ -24,6 +24,10 @@
                 <td>{{record.patientId}}</td>
               </tr>
               <tr>
+                <td class="labels"><strong>Citizen ID</strong></td>
+                <td>{{record.citizenId}}</td>
+              </tr>
+              <tr>
                 <td class="labels"><strong>First Name</strong></td>
                 <td>{{record.firstName}}</td>
               </tr>
@@ -32,8 +36,12 @@
                 <td>{{record.lastName}}</td>
               </tr>
               <tr>
-                <td class="labels"><strong>Age</strong></td>
-                <td>{{record.age}}</td>
+                <td class="labels"><strong>Sex</strong></td>
+                <td>{{record.sex}}</td>
+              </tr>
+              <tr>
+                <td class="labels"><strong>Birth</strong></td>
+                <td>{{record.birth}}</td>
               </tr>
               <ng-container *ngIf="isPatient()">
                 <tr>
@@ -52,26 +60,6 @@
               <tr>
                 <td class="labels"><strong>Blood Group</strong></td>
                 <td>{{record.bloodGroup}}</td>
-              </tr>
-              <tr>
-                <td class="labels"><strong>Allergies</strong></td>
-                <td>{{record.allergies}}</td>
-              </tr>
-              <tr>
-                <td class="labels"><strong>Symptoms</strong></td>
-                <td>{{record.symptoms}}</td>
-              </tr>
-              <tr>
-                <td class="labels"><strong>Diagnosis</strong></td>
-                <td>{{record.diagnosis}}</td>
-              </tr>
-              <tr>
-                <td class="labels"><strong>Treatment</strong></td>
-                <td>{{record.treatment}}</td>
-              </tr>
-              <tr>
-                <td class="labels"><strong>Follow up period</strong></td>
-                <td>{{record.followUp}}</td>
               </tr>
               <tr>
                 <td class="labels"><strong>Description</strong></td>
