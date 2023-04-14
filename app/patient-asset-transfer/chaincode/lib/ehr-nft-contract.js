@@ -1,4 +1,8 @@
-/* eslint-disable no-trailing-spaces */
+/**
+ * @author Nguyetpvt
+ * @email pvtnguyet.19it1@vku.udn.vn
+ * @desc [NFT Smart contract]
+ */
 /*
 SPDX-License-Identifier: Apache-2.0
 */
