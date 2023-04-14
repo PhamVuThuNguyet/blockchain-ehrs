@@ -51,29 +51,13 @@
               </ng-container>
               <ng-container *ngIf="isDoctor() && !isNew()">
                 <div class="form-group">
-                  <label for="allergies">Allergies</label>
-                  <input type="text" class="form-control" name="allergies" formControlName="allergies"
-                         placeholder="Does patient has any allergies?">
+                  <label for="description">Description</label>
+                  <input type="text" class="form-control" name="description" formControlName="description"
+                         placeholder="Enter description.">
                 </div>
                 <div class="form-group">
-                  <label for="symptoms">Symptoms</label>
-                  <input type="text" class="form-control" name="symptoms" formControlName="symptoms"
-                         placeholder="Enter patient's symptoms.">
-                </div>
-                <div class="form-group">
-                  <label for="diagnosis">Diagnosis</label>
-                  <input type="text" class="form-control" name="diagnosis" formControlName="diagnosis"
-                         placeholder="What do you find in diagnosis?">
-                </div>
-                <div class="form-group">
-                  <label for="treatment">Treatment</label>
-                  <input type="text" class="form-control" name="treatment" formControlName="treatment"
-                         placeholder="What treatment will you suggest?">
-                </div>
-                <div class="form-group">
-                  <label for="followUp">Follow Up Duration</label>
-                  <input type="text" class="form-control" name="followUp" formControlName="followUp"
-                         placeholder="Enter follow up duration.">
+                  <label for="fileSelector">File Upload</label>
+                  <input type="file" class="form-control" name="fileSelector" formControlName="fileSelector">
                 </div>
               </ng-container>
               <div *ngIf="newPatientData">
