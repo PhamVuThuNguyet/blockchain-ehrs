@@ -48,11 +48,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       phoneNumber: ['', Validators.required],
       emergPhoneNumber: ['', Validators.required],
       bloodGroup: ['', Validators.required],
-      allergies: [''],
-      symptoms: [''],
-      diagnosis: [''],
-      treatment: [''],
-      followUp: ['']
+      description: ['']
     });
   }
 
@@ -161,16 +157,13 @@ export class PatientEditComponent implements OnInit, OnDestroy {
         address: record.address,
         age: record.age,
         phoneNumber: record.phoneNumber,
-        emergPhoneNumber: record.emergPhoneNumber
+        emergPhoneNumber: record.emergPhoneNumber,
+        description: record.description
       });
     }
     else {
       this.form.patchValue({
-        allergies: record.allergies,
-        symptoms: record.symptoms,
-        diagnosis: record.diagnosis,
-        treatment: record.treatment,
-        followUp: record.followUp
+        description: record.description
       });
     }
   }
