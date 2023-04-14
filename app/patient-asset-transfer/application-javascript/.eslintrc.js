@@ -25,7 +25,7 @@ module.exports = {
     semi: ['error', 'always'],
     'no-unused-vars': ['error', {args: 'none'}],
     'no-console': 'off',
-    curly: 'error',
+    curly: ['error', 'always'],
     eqeqeq: 'error',
     'no-throw-literal': 'error',
     strict: 'error',

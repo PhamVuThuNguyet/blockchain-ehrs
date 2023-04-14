@@ -14,6 +14,4 @@ const PatientContract = require('./lib/patient-contract.js');
 const DoctorContract = require('./lib/doctor-contract.js');
 const tokenERC721Contract = require('./lib/ehr-nft-contract.js');
 
-module.exports.tokenERC721Contract = tokenERC721Contract;
-module.exports.PatientContract = PatientContract;
 module.exports.contracts = [PrimaryContract, AdminContract, DoctorContract, PatientContract, tokenERC721Contract];

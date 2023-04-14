@@ -9,7 +9,6 @@
 'use strict';
 
 const { Contract } = require('fabric-contract-api');
-// let Patient = require('./Patient.js');
 let initPatients = require('./initLedger.json');
 
 class PrimaryContract extends Contract {
