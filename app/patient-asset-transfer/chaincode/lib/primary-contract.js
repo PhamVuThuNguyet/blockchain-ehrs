@@ -1,7 +1,7 @@
 /**
  * @author Nguyetpvt
  * @email pvtnguyet.19it1@vku.udn.vn
- * @desc [Primary Smartcontract to initiate ledger with patient details]
+ * @desc [Primary smart contract to initiate ledger with patient details]
  */
 /*
  * SPDX-License-Identifier: Apache-2.0
@@ -9,7 +9,7 @@
 'use strict';
 
 const { Contract } = require('fabric-contract-api');
-let Patient = require('./Patient.js');
+// let Patient = require('./Patient.js');
 let initPatients = require('./initLedger.json');
 
 class PrimaryContract extends Contract {
@@ -35,21 +35,19 @@ class PrimaryContract extends Contract {
         let asset = JSON.parse(buffer.toString());
         asset = ({
             patientId: patientId,
+            citizenId: asset.citizenId,
             firstName: asset.firstName,
             lastName: asset.lastName,
-            age: asset.age,
+            sex: asset.sex,
+            birth: asset.birth,
             phoneNumber: asset.phoneNumber,
             emergPhoneNumber: asset.emergPhoneNumber,
             address: asset.address,
             bloodGroup: asset.bloodGroup,
-            allergies: asset.allergies,
-            symptoms: asset.symptoms,
-            diagnosis: asset.diagnosis,
-            treatment: asset.treatment,
-            followUp: asset.followUp,
             permissionGranted: asset.permissionGranted,
             password: asset.password,
-            pwdTemp: asset.pwdTemp
+            pwdTemp: asset.pwdTemp,
+            ehr: asset.ehr
         });
         return asset;
     }
@@ -89,7 +87,7 @@ class PrimaryContract extends Contract {
                 allResults.push(jsonRes);
             }
             if (res.done) {
-                console.log('end of data');
+                console.log('End of data');
                 await iterator.close();
                 console.info(allResults);
                 return allResults;
