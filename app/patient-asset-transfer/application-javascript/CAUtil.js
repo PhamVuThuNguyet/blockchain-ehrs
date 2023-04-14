@@ -4,6 +4,7 @@
  * @desc Referenced from https://github.com/hyperledger/fabric-samples/tree/master/test-application/javascript
  */
 
+const crypto = require('crypto');
 
 /**
  * @param {*} FabricCAServices
@@ -15,7 +16,7 @@
 exports.buildCAClient = (FabricCAServices, ccp, caHostName) => {
   const caInfo = ccp.certificateAuthorities[caHostName]; // lookup CA details from config
   const caTLSCACerts = caInfo.tlsCACerts.pem;
-  const caClient = new FabricCAServices(caInfo.url, {trustedRoots: caTLSCACerts, verify: false}, caInfo.caName);
+  const caClient = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
   console.log(`Built a CA Client named ${caInfo.caName}`);
   return caClient;
@@ -39,7 +40,7 @@ exports.enrollAdmin = async (caClient, wallet, orgMspId, adminUserId, adminUserP
     }
 
     // Enroll the admin user, and import the new identity into the wallet.
-    const enrollment = await caClient.enroll({enrollmentID: adminUserId, enrollmentSecret: adminUserPasswd});
+    const enrollment = await caClient.enroll({ enrollmentID: adminUserId, enrollmentSecret: adminUserPasswd });
     const x509Identity = {
       credentials: {
         certificate: enrollment.certificate,
@@ -157,8 +158,15 @@ exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, userId, admin
       mspId: orgMspId,
       type: 'X.509',
     };
+    // Get the user's public key from the enrollment certificate
+    const publicKey = enrollment.certificate;
+
+    // Generate the user's address using SHA-256 hash function
+    const hash = crypto.createHash('sha256').update(publicKey).digest('hex');
+    const userAddress = `0x${hash.slice(0, 40)}`;
     await wallet.put(userId, x509Identity);
     console.log(`Successfully registered and enrolled user ${userId} and imported it into the wallet`);
+    console.log(`User Address: ${userAddress}`);
   } catch (error) {
     console.error(`Failed to register user ${userId} : ${error}`);
     throw new Error(`Failed to register user ${userId}`);
