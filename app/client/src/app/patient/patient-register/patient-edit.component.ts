@@ -45,7 +45,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       lastName: ['', Validators.required],
       address: ['', Validators.required],
       sex: ['', Validators.required],
-      birth: ['', [ Validators.required, Validators.min(0), Validators.max(150), Validators.maxLength(3)]],
+      birth: [new Date(), Validators.required],
       phoneNumber: ['', Validators.required],
       emergPhoneNumber: ['', Validators.required],
       bloodGroup: ['', Validators.required],
@@ -157,7 +157,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
         lastName: record.lastName,
         address: record.address,
         sex: record.sex,
-        birth: record.birth,
+        birth: new Date(record.birth),
         phoneNumber: record.phoneNumber,
         emergPhoneNumber: record.emergPhoneNumber,
         description: record.description

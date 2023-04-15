@@ -16,7 +16,7 @@ export interface PatientRecord {
   lastName: string;
   address: string;
   sex: string;
-  birth: number;
+  birth: string;
   emergPhoneNumber: string;
   phoneNumber: string;
   bloodGroup: string;
@@ -43,7 +43,7 @@ export class PatientViewRecord {
   lastName = '';
   address = '';
   sex = '';
-  birth = 0;
+  birth = '';
   emergPhoneNumber = '';
   phoneNumber = '';
   bloodGroup = '';
