@@ -25,18 +25,15 @@
           <td>{{singleRecord.changedBy}}</td>
           <td>{{singleRecord.firstName}}</td>
           <td>{{singleRecord.lastName}}</td>
-          <td>{{singleRecord.age}}</td>
+          <td>{{singleRecord.sex}}</td>
+          <td>{{singleRecord.birth}}</td>
           <td>{{singleRecord.bloodGroup}}</td>
           <ng-container *ngIf="isPatient()">
             <td>{{singleRecord.address}}</td>
             <td>{{singleRecord.phoneNumber}}</td>
             <td>{{singleRecord.emergPhoneNumber}}</td>
           </ng-container>
-          <td>{{singleRecord.allergies}}</td>
-          <td>{{singleRecord.diagnosis}}</td>
-          <td>{{singleRecord.symptoms}}</td>
-          <td>{{singleRecord.treatment}}</td>
-          <td>{{singleRecord.followUp}}</td>
+          <td>{{singleRecord.description}}</td>
         </tr>
       </tbody>
     </table>

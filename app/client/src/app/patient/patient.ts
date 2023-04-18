@@ -11,10 +11,12 @@ export interface ISeconds {
 
 export interface PatientRecord {
   patientId: string;
+  citizenId: string;
   firstName: string;
   lastName: string;
   address: string;
-  age: number;
+  sex: string;
+  birth: string;
   emergPhoneNumber: string;
   phoneNumber: string;
   bloodGroup: string;
@@ -36,10 +38,12 @@ export interface PatientRecord {
 
 export class PatientViewRecord {
   patientId = '';
+  citizenId = '';
   firstName = '';
   lastName = '';
   address = '';
-  age = 0;
+  sex = '';
+  birth = '';
   emergPhoneNumber = '';
   phoneNumber = '';
   bloodGroup = '';
@@ -55,10 +59,12 @@ export class PatientViewRecord {
 
   constructor(readonly patientRecord: PatientRecord) {
     this.patientId = patientRecord.patientId;
+    this.citizenId = patientRecord.citizenId;
     this.firstName = patientRecord.firstName;
     this.lastName = patientRecord.lastName;
     this.address = patientRecord.address;
-    this.age = patientRecord.age;
+    this.sex = patientRecord.sex;
+    this.birth = patientRecord.birth;
     this.emergPhoneNumber = patientRecord.emergPhoneNumber;
     this.phoneNumber = patientRecord.phoneNumber;
     this.bloodGroup = patientRecord.bloodGroup;
