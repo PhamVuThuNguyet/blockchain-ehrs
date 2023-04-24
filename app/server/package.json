@@ -6,6 +6,7 @@
         "start": "nodemon src/server.js",
         "watch": "nodemon --watch src src/server.js",
         "prestart": "node initServer.js",
+        "prewatch": "node initServer.js",
         "lint": "eslint .",
         "api-doc": "cd ../../docs/API/ && npm start",
         "readme-doc": "cd ../../docs/ReadMe/readme-website && yarn run start"
