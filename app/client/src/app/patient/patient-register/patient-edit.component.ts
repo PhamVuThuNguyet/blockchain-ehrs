@@ -41,6 +41,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService
   ) {
     this.form = this.fb.group({
+      citizenId: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       address: ['', Validators.required],
