@@ -21,32 +21,6 @@ const symbolKey = 'symbol';
 class TokenERC721Contract extends PrimaryContract {
 
     /**
-     * Set optional information for a token.
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} name The name of the token
-     * @param {String} symbol The symbol of the token
-     */
-    async Initialize(ctx, name, symbol) {
-        console.info('============= START : Initialize Ledger ===========');
-
-        // Check contract options are not already set, client is not authorized to change them once intitialized
-        const nameBytes = await ctx.stub.getState(nameKey);
-        if (nameBytes && nameBytes.length > 0) {
-            throw new Error(
-                'contract options are already set, client is not authorized to change them'
-            );
-        }
-
-        await ctx.stub.putState(nameKey, Buffer.from(name));
-        await ctx.stub.putState(symbolKey, Buffer.from(symbol));
-
-        console.info('============= END : Initialize Ledger ===========');
-
-        return true;
-    }
-
-    /**
      * OwnerOf finds the owner of a non-fungible token
      *
      * @param {Context} ctx the transaction context
@@ -54,9 +28,6 @@ class TokenERC721Contract extends PrimaryContract {
      * @returns {String} Return the owner of the non-fungible token
      */
     async ownerOf(ctx, tokenId) {
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
-
         const nft = await this._readNFT(ctx, tokenId);
         const owner = nft.owner;
         if (!owner) {
@@ -68,33 +39,7 @@ class TokenERC721Contract extends PrimaryContract {
 
     // ============== ERC721 metadata extension ===============
 
-    /**
-     * Name returns a descriptive name for a collection of non-fungible tokens in this contract
-     *
-     * @param {Context} ctx the transaction context
-     * @returns {String} Returns the name of the token
-     */
-    async contractName(ctx) {
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
 
-        const nameAsBytes = await ctx.stub.getState(nameKey);
-        return nameAsBytes.toString();
-    }
-
-    /**
-     * Symbol returns an abbreviated name for non-fungible tokens in this contract.
-     *
-     * @param {Context} ctx the transaction context
-     * @returns {String} Returns the symbol of the token
-     */
-    async contractSymbol(ctx) {
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
-
-        const symbolAsBytes = await ctx.stub.getState(symbolKey);
-        return symbolAsBytes.toString();
-    }
 
     /**
      * TokenURI returns a distinct Uniform Resource Identifier (URI) for a given token.
@@ -104,9 +49,6 @@ class TokenERC721Contract extends PrimaryContract {
      * @returns {String} Returns the URI of the token
      */
     async tokenURI(ctx, tokenId) {
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
-
         const nft = await this._readNFT(ctx, tokenId);
         return nft.tokenURI;
     }
@@ -121,8 +63,6 @@ class TokenERC721Contract extends PrimaryContract {
      * where each one of them has an assigned and queryable owner.
      */
     async TotalSupply(ctx) {
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
 
         // There is a key record for every non-fungible token in the format of nftPrefix.tokenId.
         // TotalSupply() queries for and counts all records matching nftPrefix.*
@@ -152,11 +92,13 @@ class TokenERC721Contract extends PrimaryContract {
      * @param {String} tokenURI URI containing metadata of the minted non-fungible token
      * @returns {Object} Return the non-fungible token object
      */
-    async mint(ctx, patientAddress, tokenId, tokenURI) {
+    async mint(ctx, args) {
         console.info('============= START : Mint EHR NFT ===========');
 
-        // Check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
+        args = JSON.parse(args);
+        const patientAddress = args.patientAddress;
+        const tokenId = args.tokenId;
+        const tokenURI = args.tokenURI;
 
         // Add a non-fungible token
         const tokenIdInt = parseInt(tokenId);
@@ -204,9 +146,6 @@ class TokenERC721Contract extends PrimaryContract {
     async burn(ctx, tokenId) {
         console.info('============= START : Burn EHR NFT ===========');
 
-        // check contract options are already set first to execute the function
-        await this.CheckInitialized(ctx);
-
         // const owner = ctx.clientIdentity.getID();
         const tokenIdInt = parseInt(tokenId);
 
@@ -241,15 +180,6 @@ class TokenERC721Contract extends PrimaryContract {
         return nftBytes && nftBytes.length > 0;
     }
 
-    // Checks that contract options have been already initialized
-    async CheckInitialized(ctx) {
-        const nameBytes = await ctx.stub.getState(nameKey);
-        if (!nameBytes || nameBytes.length === 0) {
-            throw new Error(
-                'contract options need to be set before calling any function, call Initialize() to initialize contract'
-            );
-        }
-    }
 }
 
 module.exports = TokenERC721Contract;

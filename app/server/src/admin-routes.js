@@ -43,7 +43,6 @@ exports.createPatient = async (req, res) => {
     const data = JSON.stringify(req.body);
 
     const pinataData = await pinata.upload(data, 'patient');
-
     let final_data = req.body;
     final_data.ipfsHash = pinataData.IpfsHash;
 
@@ -62,14 +61,22 @@ exports.createPatient = async (req, res) => {
         return;
     }
 
-    const mintNFTRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:mint', [registerUserRes, index.toString(), final_data.ipfsHash]);
+    let args = {
+        patientAddress: registerUserRes,
+        tokenId: index.toString(),
+        tokenURI: pinataData.IpfsHash
+    }
+
+    const mintNFTRes = await network.invoke(networkObj, false, 'TokenERC721Contract:mint', JSON.stringify(args));
     if (mintNFTRes.error) {
-        res.status(400).send(createPatientRes.error);
+        await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
+        res.status(400).send(mintNFTRes.error);
         return;
     }
 
-    const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', [final_data]);
+    const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);
     if (createPatientRes.error) {
+        await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
         res.status(400).send(createPatientRes.error);
         return;
     }

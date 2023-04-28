@@ -27,7 +27,6 @@ class AdminContract extends PrimaryContract {
      *                       phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl}
      */
     async createPatient(ctx, args) {
-        console.log(args);
         args = JSON.parse(args);
 
         if (args.password === null || args.password === '') {
