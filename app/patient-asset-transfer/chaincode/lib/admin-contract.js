@@ -34,7 +34,7 @@ class AdminContract extends PrimaryContract {
         }
 
         let newPatient = await new Patient(args.patientId, args.citizenId, args.firstName, args.lastName, args.password,
-            args.sex, args.birth, args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.ipfsHash);
+            args.sex, args.birth, args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.ipfsHash, args.publicKey);
 
         const exists = await this.patientExists(ctx, newPatient.patientId);
         if (exists) {
@@ -63,7 +63,8 @@ class AdminContract extends PrimaryContract {
             permissionGranted: asset.permissionGranted,
             password: asset.password,
             pwdTemp: asset.pwdTemp,
-            ehr: asset.ehr
+            ehr: asset.ehr,
+            publicKey: asset.publicKey,
         });
         return asset;
     }

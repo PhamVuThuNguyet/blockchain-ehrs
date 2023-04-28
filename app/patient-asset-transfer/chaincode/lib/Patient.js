@@ -11,7 +11,7 @@ const crypto = require('crypto');
 
 class Patient {
 
-    constructor(patientId, citizenId, firstName, lastName, password, sex, birth, phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl) {
+    constructor(patientId, citizenId, firstName, lastName, password, sex, birth, phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl, publicKey) {
         this.patientId = patientId;
         this.citizenId = citizenId;
         this.firstName = firstName;
@@ -26,6 +26,7 @@ class Patient {
         this.pwdTemp = true;
         this.permissionGranted = [];
         this.ehr = ehrUrl;
+        this.publicKey = publicKey;
         return this;
     }
 }

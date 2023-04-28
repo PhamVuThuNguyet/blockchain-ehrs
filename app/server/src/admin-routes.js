@@ -46,7 +46,7 @@ exports.createPatient = async (req, res) => {
     let final_data = req.body;
     final_data.ipfsHash = pinataData.IpfsHash;
 
-    final_data = JSON.stringify(final_data);
+    
 
     // Enrol and register the user with the CA and adds the user to the wallet.
     const userData = JSON.stringify({
@@ -73,7 +73,9 @@ exports.createPatient = async (req, res) => {
         res.status(400).send(mintNFTRes.error);
         return;
     }
+    final_data.publicKey = registerUserRes;
 
+    final_data = JSON.stringify(final_data);
     const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);
     if (createPatientRes.error) {
         await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
