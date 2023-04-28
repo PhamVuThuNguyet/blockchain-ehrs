@@ -14,10 +14,6 @@ const PrimaryContract = require('./primary-contract');
 // Define objectType names for prefix
 const nftPrefix = 'nft';
 
-// Define key names for options
-const nameKey = 'name';
-const symbolKey = 'symbol';
-
 class TokenERC721Contract extends PrimaryContract {
 
     /**
