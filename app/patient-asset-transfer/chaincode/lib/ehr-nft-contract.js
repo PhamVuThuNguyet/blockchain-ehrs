@@ -129,7 +129,6 @@ class TokenERC721Contract extends PrimaryContract {
 
         console.info('============= END : Mint EHR NFT ===========');
 
-        return nft;
     }
 
     /**

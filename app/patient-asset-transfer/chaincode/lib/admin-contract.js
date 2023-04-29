@@ -22,7 +22,7 @@ class AdminContract extends PrimaryContract {
 
     /**
      * Create patient in the ledger
-     * @param {*} ctx 
+     * @param {*} ctx
      * @param {object} args {patientId, citizenId, firstName, lastName, password, sex, birth,
      *                       phoneNumber, emergPhoneNumber, address, bloodGroup, ehrUrl}
      */
@@ -30,7 +30,7 @@ class AdminContract extends PrimaryContract {
         args = JSON.parse(args);
 
         if (args.password === null || args.password === '') {
-            throw new Error(`Empty or null values should not be passed for password parameter`);
+            throw new Error('Empty or null values should not be passed for password parameter');
         }
 
         let newPatient = await new Patient(args.patientId, args.citizenId, args.firstName, args.lastName, args.password,
@@ -42,12 +42,12 @@ class AdminContract extends PrimaryContract {
         }
 
         const buffer = Buffer.from(JSON.stringify(newPatient));
-        await ctx.stub.putState(newPatient.patientId, buffer);
+        await ctx.stub.putState(args.patientId, buffer);
     }
 
     //Read patient details based on patientId
     async readPatient(ctx, patientId) {
-        let asset = await super.readPatient(ctx, patientId)
+        let asset = await super.readPatient(ctx, patientId);
 
         asset = ({
             patientId: patientId,
@@ -110,7 +110,7 @@ class AdminContract extends PrimaryContract {
         return this.fetchLimitedFields(asset);
     }
 
-    fetchLimitedFields = asset => {
+    fetchLimitedFields(asset) {
         for (let i = 0; i < asset.length; i++) {
             const obj = asset[i];
             asset[i] = {

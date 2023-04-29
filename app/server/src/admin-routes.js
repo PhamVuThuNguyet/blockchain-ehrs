@@ -46,8 +46,6 @@ exports.createPatient = async (req, res) => {
     let final_data = req.body;
     final_data.ipfsHash = pinataData.IpfsHash;
 
-    
-
     // Enrol and register the user with the CA and adds the user to the wallet.
     const userData = JSON.stringify({
         hospitalId: req.headers.username.slice(4, 5),
@@ -56,8 +54,8 @@ exports.createPatient = async (req, res) => {
 
     const registerUserRes = await network.registerUser(userData);
     if (registerUserRes.error) {
-        await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        res.send(registerUserRes.error);
+        const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
+        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
 
@@ -69,17 +67,20 @@ exports.createPatient = async (req, res) => {
 
     const mintNFTRes = await network.invoke(networkObj, false, 'TokenERC721Contract:mint', JSON.stringify(args));
     if (mintNFTRes.error) {
-        await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        res.status(400).send(mintNFTRes.error);
+        const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
+        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
+
+    console.log(mintNFTRes);
+    
     final_data.publicKey = registerUserRes;
 
     final_data = JSON.stringify(final_data);
     const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);
     if (createPatientRes.error) {
-        await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        res.status(400).send(createPatientRes.error);
+        const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
+        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
 
