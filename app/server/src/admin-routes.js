@@ -72,11 +72,9 @@ exports.createPatient = async (req, res) => {
         return;
     }
 
-    console.log(mintNFTRes);
-    
     final_data.publicKey = registerUserRes;
-
     final_data = JSON.stringify(final_data);
+
     const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);
     if (createPatientRes.error) {
         const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
