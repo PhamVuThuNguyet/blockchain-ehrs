@@ -158,15 +158,17 @@ exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, userId, admin
       mspId: orgMspId,
       type: 'X.509',
     };
-    // Get the user's public key from the enrollment certificate
-    const publicKey = enrollment.certificate;
+    // Generate the user's address using SHA-256 hash function
+    const hash = crypto.createHash('sha256').update(x509Identity.credentials.certificate).digest('hex');
+    const userAddress = `0x${hash.slice(0, 40)}`;
 
     // Generate the user's address using SHA-256 hash function
-    const hash = crypto.createHash('sha256').update(publicKey).digest('hex');
-    const userAddress = `0x${hash.slice(0, 40)}`;
+    const privateHash = crypto.createHash('sha256').update(x509Identity.credentials.privateKey).digest('hex');
+    const userPrivateKey = `0x${privateHash.slice(0, 64)}`;
+
     await wallet.put(userId, x509Identity);
     console.log(`Successfully registered and enrolled user ${userId} and imported it into the wallet`);
-    console.log(`User Address: ${userAddress}`);
+
     return userAddress;
   } catch (error) {
     console.error(`Failed to register user ${userId} : ${error}`);
