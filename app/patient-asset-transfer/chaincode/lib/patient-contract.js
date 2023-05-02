@@ -36,7 +36,8 @@ class PatientContract extends PrimaryContract {
         let patientId = args.patientId;
         let newFirstname = args.firstName;
         let newLastName = args.lastName;
-        let newAge = args.age;
+        let newSex = args.sex;
+        let newBirth = args.birth;
         let updatedBy = args.changedBy;
         let newPhoneNumber = args.phoneNumber;
         let newEmergPhoneNumber = args.emergPhoneNumber;
@@ -54,8 +55,13 @@ class PatientContract extends PrimaryContract {
             isDataChanged = true;
         }
 
-        if (newAge !== null && newAge !== '' && patient.age !== newAge) {
-            patient.age = newAge;
+        if (newSex !== null && newSex !== '' && patient.sex !== newSex) {
+            patient.sex = newSex;
+            isDataChanged = true;
+        }
+
+        if (newBirth !== null && newBirth !== '' && patient.birth !== newBirth) {
+            patient.birth = newBirth;
             isDataChanged = true;
         }
 
@@ -133,7 +139,8 @@ class PatientContract extends PrimaryContract {
                 patientId: obj.Key,
                 firstName: obj.Record.firstName,
                 lastName: obj.Record.lastName,
-                age: obj.Record.age,
+                sex: obj.Record.sex,
+                birth: obj.Record.birth,
                 address: obj.Record.address,
                 phoneNumber: obj.Record.phoneNumber,
                 emergPhoneNumber: obj.Record.emergPhoneNumber,
