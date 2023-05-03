@@ -1,11 +1,13 @@
 const SEAL = require('node-seal');
 
 function stringToUint32Array(str) {
-    const uint32Array = new Uint32Array(str.length);
+    const uint32Array = new Uint32Array(str.length - 1);
 
-    for (let i = 0; i < str.length; i++) {
-        uint32Array[i] = str.charCodeAt(i);
+    for (let i = 1; i < str.length - 1; i++) {
+        uint32Array[i - 1] = str.charCodeAt(i);
     }
+
+    uint32Array[str.length - 2] = ','.charCodeAt(0);
 
     return [str.length, uint32Array];
 }
@@ -14,7 +16,7 @@ async function createContext(seal) {
     const schemeType = seal.SchemeType.bfv
     const securityLevel = seal.SecurityLevel.tc128
     const polyModulusDegree = 8192
-    const bitSizes = [36, 36, 37]
+    const bitSizes = [43, 43, 44, 44, 44]
     const bitSize = 60
 
     const encParms = seal.EncryptionParameters(schemeType)
@@ -95,10 +97,11 @@ async function createCipherText(seal, context, keychain, text) {
     // Create an Encryptor to encrypt PlainTexts
     const encryptor = seal.Encryptor(context, keychain.publicKey)
 
-    const [textLength, text32] = stringToUint32Array(text);
+    const [textLength, text32] = stringToUint32Array(text)
 
     // Encode data to a PlainText
-    const plainText = batchEncoder.encode(text32)
+    const plainText = batchEncoder.encode(text32);
+    console.log(plainText.toPolynomial());
 
     // Encrypt a PlainText
     const cipherText = encryptor.encrypt(plainText)
@@ -140,15 +143,46 @@ async function homomorphicEncryption(stringA, stringB) {
 
     [stringALength, stringACipher] = await createCipherText(seal, context, keychain, stringA);
     [stringABLength, stringABCipher] = await executeHomomorphic(stringACipher, stringALength, stringB, seal, context, keychain);
+    [stringABBLength, stringABBCipher] = await executeHomomorphic(stringABCipher, stringABLength, stringB, seal, context, keychain);
 
-    const decoded = await decryptCipherText(seal, context, keychain, stringABCipher);
+    const decoded = await decryptCipherText(seal, context, keychain, stringABBCipher);
 
     const dec = new TextDecoder()
-    console.log('decoded concatenated text: ', dec.decode(new Uint8Array(decoded.buffer)))
-
+    console.log('decoded concatenated text: ', JSON.parse(JSON.stringify("{" + dec.decode(new Uint8Array(decoded.buffer)) + "}")))
 }
 
-const stringA = "Hello, "
-const stringB = "NeuralMed!"
+const data = {
+    'PID': {
+        'patientName': 'John Doe',
+        'patientId': '12345',
+        'patientAddress': '123 Main St',
+        'patientPhone': '555-555-5555'
+    },
+    'OBR': {
+        'testName': 'Blood Test',
+        'testDate': '2023-05-01',
+        'testResults': {
+            'Glucose': '120',
+            'Cholesterol': '200',
+            'HDL': '60',
+            'LDL': '130'
+        }
+    },
+}
+const addData = {
+    'OBR': {
+        'testName': 'Blood Test',
+        'testDate': '2023-05-01',
+        'testResults': {
+            'Glucose': '120',
+            'Cholesterol': '200',
+            'HDL': '60',
+            'LDL': '130'
+        }
+    }
+}
+    
+const stringA = JSON.stringify(data)
+const stringB = JSON.stringify(addData)
 
 homomorphicEncryption(stringA, stringB);
