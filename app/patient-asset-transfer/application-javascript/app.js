@@ -128,23 +128,23 @@ exports.registerUser = async function (attributes) {
 
   try {
     const wallet = await buildWallet(Wallets, walletPath);
-    let userAddress;
+    let userAddress, userPrivateKey;
     // TODO: Must be handled in a config file instead of using if
     if (hospitalId === 1) {
       const ccp = buildCCPHosp1();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp1.neuralmed.com');
-      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'hosp1admin', attributes);
+      [userAddress, userPrivateKey] = await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'hosp1admin', attributes);
     } else if (hospitalId === 2) {
       const ccp = buildCCPHosp2();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp2.neuralmed.com');
-      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg2, userId, 'hosp2admin', attributes);
+      [userAddress, userPrivateKey] = await registerAndEnrollUser(caClient, wallet, mspOrg2, userId, 'hosp2admin', attributes);
     } else if (hospitalId === 3) {
       const ccp = buildCCPHosp3();
       const caClient = buildCAClient(FabricCAServices, ccp, 'ca.hosp3.neuralmed.com');
-      userAddress = await registerAndEnrollUser(caClient, wallet, mspOrg3, userId, 'hosp3admin', attributes);
+      [userAddress, userPrivateKey] = await registerAndEnrollUser(caClient, wallet, mspOrg3, userId, 'hosp3admin', attributes);
     }
     console.log(`Successfully registered user: + ${userId}`);
-    return userAddress;
+    return [userAddress, userPrivateKey];
   } catch (error) {
     console.error(`Failed to register user + ${userId} + : ${error}`);
     const response = {};

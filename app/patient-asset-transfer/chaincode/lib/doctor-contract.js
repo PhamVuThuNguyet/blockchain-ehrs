@@ -29,15 +29,17 @@ class DoctorContract extends AdminContract {
         }
         asset = ({
             patientId: patientId,
+            citizenId: asset.citizenId,
             firstName: asset.firstName,
             lastName: asset.lastName,
-            age: asset.age,
+            sex: asset.sex,
+            birth: asset.birth,
+            phoneNumber: asset.phoneNumber,
+            emergPhoneNumber: asset.emergPhoneNumber,
+            address: asset.address,
             bloodGroup: asset.bloodGroup,
-            allergies: asset.allergies,
-            symptoms: asset.symptoms,
-            diagnosis: asset.diagnosis,
-            treatment: asset.treatment,
-            followUp: asset.followUp
+            ehr: asset.ehr,
+            publicKey: asset.publicKey,
         });
         return asset;
     }

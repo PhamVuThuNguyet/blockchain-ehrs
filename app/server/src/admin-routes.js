@@ -60,7 +60,7 @@ exports.createPatient = async (req, res) => {
     }
 
     let args = {
-        patientAddress: registerUserRes,
+        patientAddress: registerUserRes[0],
         tokenId: index.toString(),
         tokenURI: pinataData.IpfsHash
     }
@@ -72,7 +72,8 @@ exports.createPatient = async (req, res) => {
         return;
     }
 
-    final_data.publicKey = registerUserRes;
+    final_data.publicKey = registerUserRes[0];
+    final_data.privateKey = registerUserRes[1];
     final_data = JSON.stringify(final_data);
 
     const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);

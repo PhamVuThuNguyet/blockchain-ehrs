@@ -17,15 +17,18 @@
         </tr>
       </thead>
       <tbody>
-        <!--<tr *ngFor="let singleRecord of patientRecords">
-          <td *ngFor="let columnName of headerNames">
-            {{singleRecord[columnName.keyName]}}
-          </td>
-        </tr>-->
         <tr *ngFor="let singleRecord of patientRecords$ | async">
           <td>{{singleRecord.patientId}}</td>
+          <td>{{singleRecord.citizenId}}</td>
           <td>{{singleRecord.firstName}}</td>
           <td>{{singleRecord.lastName}}</td>
+          <td>{{singleRecord.sex}}</td>
+          <td>{{singleRecord.birth}}</td>
+          <td>{{singleRecord.phoneNumber}}</td>
+          <td>{{singleRecord.emergPhoneNumber}}</td>
+          <td>{{singleRecord.address}}</td>
+          <td>{{singleRecord.bloodGroup}}</td>
+          <td>{{singleRecord.publicKey}}</td>
         </tr>
       </tbody>
     </table>

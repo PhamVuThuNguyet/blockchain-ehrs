@@ -42,7 +42,6 @@ class PatientContract extends PrimaryContract {
         let newPhoneNumber = args.phoneNumber;
         let newEmergPhoneNumber = args.emergPhoneNumber;
         let newAddress = args.address;
-        let newAllergies = args.allergies;
 
         const patient = await this.readPatient(ctx, patientId)
         if (newFirstname !== null && newFirstname !== '' && patient.firstName !== newFirstname) {
@@ -84,11 +83,6 @@ class PatientContract extends PrimaryContract {
             isDataChanged = true;
         }
 
-        if (newAllergies !== null && newAllergies !== '' && patient.allergies !== newAllergies) {
-            patient.allergies = newAllergies;
-            isDataChanged = true;
-        }
-
         if (isDataChanged === false) return;
 
         const buffer = Buffer.from(JSON.stringify(patient));
@@ -107,7 +101,7 @@ class PatientContract extends PrimaryContract {
 
         const patient = await this.readPatient(ctx, patientId);
         patient.password = crypto.createHash('sha256').update(newPassword).digest('hex');
-        if(patient.pwdTemp){
+        if (patient.pwdTemp) {
             patient.pwdTemp = false;
             patient.changedBy = patientId;
         }
@@ -120,7 +114,8 @@ class PatientContract extends PrimaryContract {
         let patient = await this.readPatient(ctx, patientId);
         patient = ({
             password: patient.password,
-            pwdTemp: patient.pwdTemp})
+            pwdTemp: patient.pwdTemp
+        })
         return patient;
     }
 
@@ -137,6 +132,7 @@ class PatientContract extends PrimaryContract {
             const obj = asset[i];
             asset[i] = {
                 patientId: obj.Key,
+                citizenId: obj.Record.citizenId,
                 firstName: obj.Record.firstName,
                 lastName: obj.Record.lastName,
                 sex: obj.Record.sex,
@@ -145,11 +141,6 @@ class PatientContract extends PrimaryContract {
                 phoneNumber: obj.Record.phoneNumber,
                 emergPhoneNumber: obj.Record.emergPhoneNumber,
                 bloodGroup: obj.Record.bloodGroup,
-                allergies: obj.Record.allergies,
-                symptoms: obj.Record.symptoms,
-                diagnosis: obj.Record.diagnosis,
-                treatment: obj.Record.treatment,
-                followUp: obj.Record.followUp
             };
             if (includeTimeStamp) {
                 asset[i].changedBy = obj.Record.changedBy;

@@ -34,7 +34,7 @@ class AdminContract extends PrimaryContract {
         }
 
         let newPatient = await new Patient(args.patientId, args.citizenId, args.firstName, args.lastName, args.password,
-            args.sex, args.birth, args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.ipfsHash, args.publicKey);
+            args.sex, args.birth, args.phoneNumber, args.emergPhoneNumber, args.address, args.bloodGroup, args.ipfsHash, args.publicKey, args.privateKey);
 
         const exists = await this.patientExists(ctx, newPatient.patientId);
         if (exists) {
@@ -60,10 +60,6 @@ class AdminContract extends PrimaryContract {
             emergPhoneNumber: asset.emergPhoneNumber,
             address: asset.address,
             bloodGroup: asset.bloodGroup,
-            permissionGranted: asset.permissionGranted,
-            password: asset.password,
-            pwdTemp: asset.pwdTemp,
-            ehr: asset.ehr,
             publicKey: asset.publicKey,
         });
         return asset;
@@ -115,10 +111,16 @@ class AdminContract extends PrimaryContract {
             const obj = asset[i];
             asset[i] = {
                 patientId: obj.Key,
+                citizenId: obj.Record.citizenId,
                 firstName: obj.Record.firstName,
                 lastName: obj.Record.lastName,
+                sex: obj.Record.sex,
+                birth: obj.Record.birth,
                 phoneNumber: obj.Record.phoneNumber,
-                emergPhoneNumber: obj.Record.emergPhoneNumber
+                emergPhoneNumber: obj.Record.emergPhoneNumber,
+                address: obj.Record.address,
+                bloodGroup: obj.Record.bloodGroup,
+                publicKey: obj.Record.publicKey,
             };
         }
 

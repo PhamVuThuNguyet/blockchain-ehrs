@@ -20,21 +20,19 @@ export interface PatientRecord {
   emergPhoneNumber: string;
   phoneNumber: string;
   bloodGroup: string;
-  allergies: boolean;
-  symptoms: string;
-  diagnosis: string;
-  treatment: string;
-  followUp: string;
-  description: string;
+  publicKey: string;
+  privateKey: string;
+  ehr: string;
+  // allergies: boolean;
+  // symptoms: string;
+  // diagnosis: string;
+  // treatment: string;
+  // followUp: string;
+  // description: string;
   docType: string;
   changedBy: string;
   Timestamp: Timestamp;
 }
-
-/*export interface ResRecord {
-  Key: string;
-  Record: PatientRecord;
-}*/
 
 export class PatientViewRecord {
   patientId = '';
@@ -47,12 +45,15 @@ export class PatientViewRecord {
   emergPhoneNumber = '';
   phoneNumber = '';
   bloodGroup = '';
-  allergies = false;
-  symptoms = '';
-  diagnosis = '';
-  treatment = '';
-  followUp = '';
-  description = '';
+  publicKey: string;
+  privateKey: string;
+  ehr: string;
+  // allergies = false;
+  // symptoms = '';
+  // diagnosis = '';
+  // treatment = '';
+  // followUp = '';
+  // description = '';
   docType = '';
   changedBy = '';
   Timestamp = '';
@@ -62,64 +63,78 @@ export class PatientViewRecord {
     this.citizenId = patientRecord.citizenId;
     this.firstName = patientRecord.firstName;
     this.lastName = patientRecord.lastName;
-    this.address = patientRecord.address;
     this.sex = patientRecord.sex;
     this.birth = patientRecord.birth;
-    this.emergPhoneNumber = patientRecord.emergPhoneNumber;
     this.phoneNumber = patientRecord.phoneNumber;
+    this.emergPhoneNumber = patientRecord.emergPhoneNumber;
+    this.address = patientRecord.address;
     this.bloodGroup = patientRecord.bloodGroup;
-    this.allergies = patientRecord.allergies;
-    this.symptoms = patientRecord.symptoms;
-    this.diagnosis = patientRecord.diagnosis;
-    this.treatment = patientRecord.treatment;
-    this.followUp = patientRecord.followUp;
-    this.description = patientRecord.description;
-    this.docType = patientRecord.docType;
+    // this.docType = patientRecord.docType;
+    this.ehr = patientRecord.ehr;
+    this.publicKey = patientRecord.publicKey;
+    this.privateKey = patientRecord.privateKey;
     this.changedBy = patientRecord.changedBy;
-    this.Timestamp = patientRecord.Timestamp ? new Date(patientRecord.Timestamp.seconds.low * 1000).toDateString() : '';
+    this.Timestamp = patientRecord.Timestamp
+      ? new Date(patientRecord.Timestamp.seconds.low * 1000).toDateString()
+      : '';
   }
 }
 
 export class PatientAdminViewRecord {
   patientId = '';
+  citizenId = '';
   firstName = '';
   lastName = '';
-  docType = '';
-  emergPhoneNumber = '';
+  sex = '';
+  birth = '';
   phoneNumber = '';
+  emergPhoneNumber = '';
+  address = '';
+  bloodGroup = '';
+  publicKey = '';
 
   constructor(readonly patientRecord: PatientRecord) {
     this.patientId = patientRecord.patientId;
+    this.citizenId = patientRecord.citizenId;
     this.firstName = patientRecord.firstName;
     this.lastName = patientRecord.lastName;
-    this.docType = patientRecord.docType;
-    this.emergPhoneNumber = patientRecord.emergPhoneNumber;
+    this.sex = patientRecord.sex;
+    this.birth = patientRecord.birth;
     this.phoneNumber = patientRecord.phoneNumber;
+    this.emergPhoneNumber = patientRecord.emergPhoneNumber;
+    this.address = patientRecord.address;
+    this.bloodGroup = patientRecord.bloodGroup;
+    this.publicKey = patientRecord.publicKey;
   }
 }
 
 export class PatientDoctorViewRecord {
   patientId = '';
+  citizenId = '';
   firstName = '';
   lastName = '';
+  sex = '';
+  birth = '';
+  phoneNumber = '';
+  emergPhoneNumber = '';
+  address = '';
   bloodGroup = '';
-  allergies = false;
-  symptoms = '';
-  diagnosis = '';
-  treatment = '';
-  followUp = '';
-  description = '';
+  publicKey = '';
+  ehr = '';
+
   constructor(readonly patientRecord: PatientRecord) {
     this.patientId = patientRecord.patientId;
+    this.citizenId = patientRecord.citizenId;
     this.firstName = patientRecord.firstName;
     this.lastName = patientRecord.lastName;
+    this.sex = patientRecord.sex;
+    this.birth = patientRecord.birth;
+    this.phoneNumber = patientRecord.phoneNumber;
+    this.emergPhoneNumber = patientRecord.emergPhoneNumber;
+    this.address = patientRecord.address;
     this.bloodGroup = patientRecord.bloodGroup;
-    this.allergies = patientRecord.allergies;
-    this.symptoms = patientRecord.symptoms;
-    this.diagnosis = patientRecord.diagnosis;
-    this.treatment = patientRecord.treatment;
-    this.followUp = patientRecord.followUp;
-    this.description = patientRecord.description;
+    this.publicKey = patientRecord.publicKey;
+    this.ehr = patientRecord.ehr;
   }
 }
 

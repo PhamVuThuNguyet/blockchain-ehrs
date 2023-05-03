@@ -45,26 +45,40 @@
               </tr>
               <ng-container *ngIf="isPatient()">
                 <tr>
-                  <td class="labels"><strong>Contact number</strong></td>
-                  <td>{{record.phoneNumber}}</td>
-                </tr>
-                <tr>
-                  <td class="labels"><strong>Emergency number</strong></td>
-                  <td>{{record.emergPhoneNumber}}</td>
-                </tr>
-                <tr>
                   <td class="labels"><strong>Address</strong></td>
                   <td>{{record.address}}</td>
                 </tr>
+                <tr>
+                  <td class="labels"><strong>Contact number</strong></td>
+                  <td>{{record.phoneNumber}}</td>
+                </tr>
               </ng-container>
+              <tr>
+                <td class="labels"><strong>Emergency number</strong></td>
+                <td>{{record.emergPhoneNumber}}</td>
+              </tr>
               <tr>
                 <td class="labels"><strong>Blood Group</strong></td>
                 <td>{{record.bloodGroup}}</td>
               </tr>
               <tr>
+                <td class="labels"><strong>Public Key</strong></td>
+                <td>{{record.publicKey}}</td>
+              </tr>
+              <tr>
+                <td class="labels"><strong>EHR IPFS Hash</strong></td>
+                <td>{{record.ehr}}</td>
+              </tr>
+              <ng-container *ngIf="isPatient()">
+                <tr>
+                  <td class="labels"><strong>Private Key</strong></td>
+                  <td>{{record.privateKey}}</td>
+                </tr>
+              </ng-container>
+              <!-- <tr>
                 <td class="labels"><strong>Description</strong></td>
                 <td>{{record.description}}</td>
-              </tr>
+              </tr> -->
             </span>
           </table>
           <div *ngIf="patientRecordObs === undefined">

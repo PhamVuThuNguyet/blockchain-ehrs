@@ -15,14 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <!--<tr *ngFor="let singleRecord of [patientRecordHistory]">
-          <td *ngFor="let columnName of headerNames">
-            {{singleRecord[columnName.keyName]}}
-          </td>
-        </tr>-->
         <tr *ngFor="let singleRecord of patientRecordHistoryObs$ | async">
           <td>{{convertToDate(singleRecord.Timestamp)}}</td>
           <td>{{singleRecord.changedBy}}</td>
+          <td>{{singleRecord.patientId}}</td>
+          <td>{{singleRecord.citizenId}}</td>
           <td>{{singleRecord.firstName}}</td>
           <td>{{singleRecord.lastName}}</td>
           <td>{{singleRecord.sex}}</td>
@@ -31,9 +28,12 @@
           <ng-container *ngIf="isPatient()">
             <td>{{singleRecord.address}}</td>
             <td>{{singleRecord.phoneNumber}}</td>
-            <td>{{singleRecord.emergPhoneNumber}}</td>
+            <td>{{singleRecord.privateKey}}</td>
           </ng-container>
-          <td>{{singleRecord.description}}</td>
+          <td>{{singleRecord.emergPhoneNumber}}</td>
+          <td>{{singleRecord.publicKey}}</td>
+          <td>{{singleRecord.ehr}}</td>
+          <!-- <td>{{singleRecord.description}}</td> -->
         </tr>
       </tbody>
     </table>

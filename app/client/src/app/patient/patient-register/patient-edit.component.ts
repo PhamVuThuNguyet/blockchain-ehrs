@@ -50,7 +50,6 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       phoneNumber: ['', Validators.required],
       emergPhoneNumber: ['', Validators.required],
       bloodGroup: ['', Validators.required],
-      description: ['']
     });
   }
 
@@ -161,12 +160,12 @@ export class PatientEditComponent implements OnInit, OnDestroy {
         birth: new Date(record.birth),
         phoneNumber: record.phoneNumber,
         emergPhoneNumber: record.emergPhoneNumber,
-        description: record.description
+        // description: record.description
       });
     }
     else {
       this.form.patchValue({
-        description: record.description
+        // description: record.description
       });
     }
   }

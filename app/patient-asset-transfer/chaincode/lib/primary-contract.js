@@ -46,7 +46,9 @@ class PrimaryContract extends Contract {
             permissionGranted: asset.permissionGranted,
             password: asset.password,
             pwdTemp: asset.pwdTemp,
-            ehr: asset.ehr
+            ehr: asset.ehr,
+            publicKey: asset.publicKey,
+            privateKey: asset.privateKey
         });
         return asset;
     }

@@ -11,7 +11,7 @@ import { AuthService } from '../../core/auth/auth.service';
 @Component({
   selector: 'app-patient-history',
   templateUrl: './patient-history.component.html',
-  styleUrls: ['./patient-history.component.scss']
+  styleUrls: ['./patient-history.component.scss'],
 })
 export class PatientHistoryComponent implements OnInit, OnDestroy {
   public patientID: any;
@@ -21,6 +21,8 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
   headerNames = [
     new DisplayVal(PatientViewRecord.prototype.Timestamp, 'Date'),
     new DisplayVal(PatientViewRecord.prototype.changedBy, 'Last changed by'),
+    new DisplayVal(PatientViewRecord.prototype.patientId, 'Patient Id'),
+    new DisplayVal(PatientViewRecord.prototype.citizenId, 'Citizen Id'),
     new DisplayVal(PatientViewRecord.prototype.firstName, 'First Name'),
     new DisplayVal(PatientViewRecord.prototype.lastName, 'Last Name'),
     new DisplayVal(PatientViewRecord.prototype.sex, 'Sex'),
@@ -32,24 +34,32 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly patientService: PatientService,
     private readonly authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (this.isPatient()) {
       this.headerNames.push(
         new DisplayVal(PatientViewRecord.prototype.address, 'Address'),
-        new DisplayVal(PatientViewRecord.prototype.phoneNumber, 'Contact number'),
-        new DisplayVal(PatientViewRecord.prototype.emergPhoneNumber, 'Emergency number')
+        new DisplayVal(
+          PatientViewRecord.prototype.phoneNumber,
+          'Contact number'
+        ),
+        new DisplayVal(PatientViewRecord.prototype.privateKey, 'Private Key')
       );
     }
     this.headerNames.push(
-      new DisplayVal(PatientViewRecord.prototype.description, 'Description')
+      // new DisplayVal(PatientViewRecord.prototype.description, 'Description')
+      new DisplayVal(
+        PatientViewRecord.prototype.emergPhoneNumber,
+        'Emergency phone number'
+      ),
+      new DisplayVal(PatientViewRecord.prototype.publicKey, 'Public Key'),
+      new DisplayVal(PatientViewRecord.prototype.ehr, 'EHR IPFS hash')
     );
-    this.sub = this.route.params
-      .subscribe((params: Params) => {
-        this.patientID = params.patientId;
-        this.refresh();
-      });
+    this.sub = this.route.params.subscribe((params: Params) => {
+      this.patientID = params.patientId;
+      this.refresh();
+    });
   }
 
   ngOnDestroy(): void {
@@ -57,14 +67,16 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
   }
 
   public refresh(): void {
-    this.patientRecordHistoryObs$ = this.patientService.getPatientHistoryByKey(this.patientID);
+    this.patientRecordHistoryObs$ = this.patientService.getPatientHistoryByKey(
+      this.patientID
+    );
   }
 
   public isPatient(): boolean {
     return this.authService.getRole() === RoleEnum.PATIENT;
   }
 
-  public convertToDate(val: any): string{
+  public convertToDate(val: any): string {
     return new Date(val.seconds.low * 1000).toDateString();
   }
 }
