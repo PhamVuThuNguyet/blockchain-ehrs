@@ -29,6 +29,13 @@ export interface PatientRecord {
   // treatment: string;
   // followUp: string;
   // description: string;
+  chiefComplaint: string;
+  HPI: string;
+  PMH: string;
+  physicalExamination: string;
+  paraclinicalTests: string;
+  diagnosis: string;
+  treatment: string;
   docType: string;
   changedBy: string;
   Timestamp: Timestamp;
