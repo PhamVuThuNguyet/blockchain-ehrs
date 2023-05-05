@@ -50,6 +50,13 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       phoneNumber: ['', Validators.required],
       emergPhoneNumber: ['', Validators.required],
       bloodGroup: ['', Validators.required],
+      chiefComplaint: [''],
+      HPI: [''],
+      PMH: [''],
+      physicalExamination: [''],
+      paraclinicalTests: [''],
+      diagnosis: [''],
+      treatment: ['']
     });
   }
 
