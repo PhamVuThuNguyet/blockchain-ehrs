@@ -13,7 +13,7 @@
 
 <div class="sidebar-layout-bottom-row p-3 container-fluid">
   <div class="row">
-    <div class="col-xl-6 col-sm-12">
+    <div class="col-xl-8 col-sm-12">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Details</h5>
@@ -49,12 +49,12 @@
                   <td>{{record.address}}</td>
                 </tr>
                 <tr>
-                  <td class="labels"><strong>Contact number</strong></td>
+                  <td class="labels"><strong>Contact Number</strong></td>
                   <td>{{record.phoneNumber}}</td>
                 </tr>
               </ng-container>
               <tr>
-                <td class="labels"><strong>Emergency number</strong></td>
+                <td class="labels"><strong>Emergency Number</strong></td>
                 <td>{{record.emergPhoneNumber}}</td>
               </tr>
               <tr>
@@ -73,6 +73,36 @@
                 <tr>
                   <td class="labels"><strong>Private Key</strong></td>
                   <td>{{record.privateKey}}</td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="isDoctor()">
+                <tr>
+                  <td class="labels"><strong>Chief Complaint</strong></td>
+                  <td>{{record.chiefComplaint}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>History of Present Illness</strong></td>
+                  <td>{{record.HPI}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>Past Medical History</strong></td>
+                  <td>{{record.PMH}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>Physical Examination</strong></td>
+                  <td>{{record.physicalExamination}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>Paraclinical Tests</strong></td>
+                  <td>{{record.paraclinicalTests}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>Diagnosis</strong></td>
+                  <td>{{record.diagnosis}}</td>
+                </tr>
+                <tr>
+                  <td class="labels"><strong>Recommended Treatment</strong></td>
+                  <td>{{record.treatment}}</td>
                 </tr>
               </ng-container>
               <!-- <tr>
