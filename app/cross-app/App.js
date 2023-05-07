@@ -4,10 +4,10 @@ import { LogBox } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import CustomStatusBar from "./src/components/layouts/CustomStatusBar";
-import Main from "./src/modules";
-import { store } from "./src/app/store";
-import COLORS from "./src/constants/colors";
+import CustomStatusBar from "@src/components/layouts/CustomStatusBar";
+import Main from "@src/modules";
+import { store } from "@src/app/store";
+import COLORS from "@src/constants/colors";
 
 LogBox.ignoreAllLogs();
 
