@@ -29,6 +29,13 @@ class Patient {
         patient.ehr = ehrUrl;
         patient.publicKey = publicKey;
         patient.privateKey = privateKey;
+        patient.chiefComplaint = null;
+        patient.HPI = null;
+        patient.PMH = null;
+        patient.physicalExamination = null;
+        patient.paraclinicalTests = null;
+        patient.diagnosis = null;
+        patient.treatment = null;
         return patient;
     }
 }
