@@ -11,7 +11,10 @@
         "bloodGroup": "O+",
         "permissionGranted": ["hosp1admin", "hosp2admin"],
         "password": "ee6affdb08c3ef9c6444816329b56250ae42a2149b3e72136251a7d8340de43b",
-        "pwdTemp": true
+        "pwdTemp": true,
+        "publicKey": "0x1d1211ed9a02D5Fcbc072c5787D0C221F62FA3C8",
+        "privateKey": "0x6525c9e815a80e440480b8d27fd49d987dc1c451c6f073d96c1dec07b136f193",
+        "ehr":  "https://ipfs.io/ipfs/QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
     },
     {
         "citizenId": "241754613",
@@ -25,6 +28,9 @@
         "bloodGroup": "B+",
         "permissionGranted": ["hosp1admin", "hosp2admin"],
         "password": "fd1e5d642da134218f1cc5c260feb3e4042658a35d78c4eb2fe2b2f1c7e7795b",
-        "pwdTemp": true
+        "pwdTemp": true,
+        "publicKey": "0x1d1211ed9a02D5Fcbc072c5787D0C221F62FA3C8",
+        "privateKey": "0x6525c9e815a80e440480b8d27fd49d987dc1c451c6f073d96c1dec07b136f193",
+        "ehr":  "https://ipfs.io/ipfs/QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
     }
 ]
