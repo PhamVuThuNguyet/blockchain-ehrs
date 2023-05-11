@@ -4,7 +4,7 @@
     "description": "Patient application implemented in JavaScript",
     "scripts": {
         "start": "nodemon src/server.js",
-        "watch": "nodemon --watch src src/server.js",
+        "watch": "nodemon src/server.js --watch src",
         "prestart": "node initServer.js",
         "prewatch": "node initServer.js",
         "lint": "eslint .",
@@ -40,6 +40,7 @@
         "eslint-plugin-react": "^7.22.0"
     },
     "nodemonConfig": {
+        "watch": ["src"],
         "ignore": ["**/upload/**"],
         "delay": 1000
     }

@@ -23,12 +23,6 @@ export interface PatientRecord {
   publicKey: string;
   privateKey: string;
   ehr: string;
-  // allergies: boolean;
-  // symptoms: string;
-  // diagnosis: string;
-  // treatment: string;
-  // followUp: string;
-  // description: string;
   chiefComplaint: string;
   HPI: string;
   PMH: string;
@@ -55,12 +49,6 @@ export class PatientViewRecord {
   publicKey: string;
   privateKey: string;
   ehr: string;
-  // allergies = false;
-  // symptoms = '';
-  // diagnosis = '';
-  // treatment = '';
-  // followUp = '';
-  // description = '';
   docType = '';
   changedBy = '';
   Timestamp = '';
