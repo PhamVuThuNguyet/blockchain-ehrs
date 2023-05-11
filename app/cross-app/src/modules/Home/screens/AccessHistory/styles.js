@@ -24,10 +24,11 @@ export default styles = StyleSheet.create({
     flexDirection: 'column'
   },
   infoText: {
-    marginTop: 12,
     color: COLORS.WHITE_COLOR,
+    marginBottom: 12
   },
   infoTime: {
-    color: COLORS.PLACEHOLDER_TEXT_COLOR
+    color: COLORS.PLACEHOLDER_TEXT_COLOR,
+    marginBottom: 0
   }
 });

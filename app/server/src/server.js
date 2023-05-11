@@ -14,6 +14,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const connectDB = require('./config/db.conf');
 
 const jwtSecretToken = 'password';
 const refreshSecretToken = 'refreshpassword';
@@ -25,16 +26,26 @@ let refreshTokens = [];
 
 // Express Application init
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.listen(3001, () => console.log('Backend server running on 3001'));
+connectDB()
+    .then(() => {
+        app.listen(3001, () => console.log('Backend server running on 3001'));
+    })
+    .catch(error => {
+        console.log('start', error);
+        process.exit(0);
+    })
 
 // Bring key classes into scope
 const patientRoutes = require('./patient-routes');
 const doctorRoutes = require('./doctor-routes');
 const adminRoutes = require('./admin-routes');
+const requestRoutes = require('./request-routes');
 const { ROLE_DOCTOR, ROLE_ADMIN, ROLE_PATIENT, CHANGE_TMP_PASSWORD } = require('../utils');
 const { createRedisClient, capitalize, getMessage } = require('../utils');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
@@ -64,6 +75,8 @@ const authenticateJWT = (req, res, next) => {
                 return res.status(403).send('Unauthorized request: Wrong or expired token found');
             }
             req.user = user;
+            req.headers.role = user.role;
+            req.headers.username = user.username;
             next();
         });
     } else {
@@ -191,3 +204,10 @@ app.get('/patients/:patientId/history', authenticateJWT, patientRoutes.getPatien
 app.get('/doctors/:hospitalId([0-9]+)/_all', authenticateJWT, patientRoutes.getDoctorsByHospitalId);
 app.patch('/patients/:patientId/grant/:doctorId', authenticateJWT, patientRoutes.grantAccessToDoctor);
 app.patch('/patients/:patientId/revoke/:doctorId', authenticateJWT, patientRoutes.revokeAccessFromDoctor);
+
+// Request route
+app.post('/requests', authenticateJWT, requestRoutes.requestToDoctor);
+app.patch('/requests', authenticateJWT, requestRoutes.updateRequestStatus);
+app.get('/requests/:patientId', authenticateJWT, requestRoutes.getRequestOfPatient);
+app.post('/notifications', authenticateJWT, requestRoutes.createNotification);
+app.get('/notifications/:patientId', authenticateJWT, requestRoutes.getNotificatonOfPatient);

@@ -14,10 +14,8 @@ export default styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.PRIMARY_COLOR,
   },
-  table: {
-    
-  },
-  head: { 
+  table: {},
+  head: {
     height: 50,
     backgroundColor: COLORS.INPUT_COLOR,
   },
@@ -29,7 +27,7 @@ export default styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     backgroundColor: COLORS.INPUT_COLOR,
-    height: 50
+    height: 50,
   },
   btnWrap: {
     display: "flex",
@@ -53,5 +51,8 @@ export default styles = StyleSheet.create({
   },
   btnReject: {
     backgroundColor: COLORS.RED_COLOR,
+  },
+  spinnerTextStyle: {
+    color: "#FFF",
   },
 });

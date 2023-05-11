@@ -75,7 +75,7 @@
                   <td>{{record.privateKey}}</td>
                 </tr>
               </ng-container>
-              <ng-container *ngIf="isDoctor()">
+              <ng-container *ngIf="isDoctor() || isPatient()">
                 <tr>
                   <td class="labels"><strong>Chief Complaint</strong></td>
                   <td>{{record.chiefComplaint}}</td>

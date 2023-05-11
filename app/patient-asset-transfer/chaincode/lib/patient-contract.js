@@ -34,6 +34,7 @@ class PatientContract extends PrimaryContract {
         args = JSON.parse(args);
         let isDataChanged = false;
         let patientId = args.patientId;
+        let newCitizenId = args.citizenId;
         let newFirstname = args.firstName;
         let newLastName = args.lastName;
         let newSex = args.sex;
@@ -44,6 +45,11 @@ class PatientContract extends PrimaryContract {
         let newAddress = args.address;
 
         const patient = await this.readPatient(ctx, patientId)
+        if (newCitizenId !== null && newCitizenId !== '' && patient.citizenId !== newCitizenId) {
+            patient.citizenId = newCitizenId;
+            isDataChanged = true;
+        }
+
         if (newFirstname !== null && newFirstname !== '' && patient.firstName !== newFirstname) {
             patient.firstName = newFirstname;
             isDataChanged = true;
