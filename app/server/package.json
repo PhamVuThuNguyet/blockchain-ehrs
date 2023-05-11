@@ -4,7 +4,7 @@
     "description": "Patient application implemented in JavaScript",
     "scripts": {
         "start": "nodemon src/server.js",
-        "watch": "nodemon src/server.js --watch src",
+        "watch": "nodemon src/server.js --watch src/*",
         "prestart": "node initServer.js",
         "prewatch": "node initServer.js",
         "lint": "eslint .",

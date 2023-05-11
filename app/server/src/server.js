@@ -122,9 +122,8 @@ app.post('/login', async (req, res) => {
             } else {
                 const parsedResponse = await JSON.parse(response);
                 if (parsedResponse.password.toString('utf8') === value) {
-                    (!parsedResponse.pwdTemp) ?
-                        user = true :
-                        res.status(200).send(getMessage(false, CHANGE_TMP_PASSWORD));
+                    (parsedResponse.pwdTemp) ?
+                        res.status(200).send(getMessage(false, CHANGE_TMP_PASSWORD)) : (user = true);
                 }
             }
         } else {
@@ -134,7 +133,7 @@ app.post('/login', async (req, res) => {
             });
             args = [JSON.stringify(args)];
             const response = await network.invoke(networkObj, false, capitalize(role) + 'Contract:updatePatientPassword', args);
-            (response.error) ? res.status(500).send(response.error) : user = true;
+            (response.error) ? res.status(500).send(response.error) : (user = true);
         }
     }
 
@@ -150,7 +149,8 @@ app.post('/login', async (req, res) => {
             refreshToken,
         });
     } else {
-        res.status(400).send({ error: 'Username or password incorrect!' });
+        console.log('Username or password incorrect!');
+        // res.status(400).send({ error: 'Username or password incorrect!' });
     }
 });
 
