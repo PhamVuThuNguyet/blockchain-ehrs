@@ -49,6 +49,13 @@ export class PatientViewRecord {
   publicKey: string;
   privateKey: string;
   ehr: string;
+  chiefComplaint = '';
+  HPI = '';
+  PMH = '';
+  physicalExamination = '';
+  paraclinicalTests = '';
+  diagnosis = '';
+  treatment = '';
   docType = '';
   changedBy = '';
   Timestamp = '';
@@ -68,6 +75,13 @@ export class PatientViewRecord {
     this.ehr = patientRecord.ehr;
     this.publicKey = patientRecord.publicKey;
     this.privateKey = patientRecord.privateKey;
+    this.chiefComplaint = patientRecord.chiefComplaint;
+    this.HPI = patientRecord.HPI;
+    this.PMH = patientRecord.PMH;
+    this.physicalExamination = patientRecord.physicalExamination;
+    this.paraclinicalTests = patientRecord.paraclinicalTests;
+    this.diagnosis = patientRecord.diagnosis;
+    this.treatment = patientRecord.treatment;
     this.changedBy = patientRecord.changedBy;
     this.Timestamp = patientRecord.Timestamp
       ? new Date(patientRecord.Timestamp.seconds.low * 1000).toDateString()
