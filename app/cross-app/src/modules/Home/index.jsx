@@ -7,10 +7,20 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
 import Header from "../../components/layouts/Header";
 import COLORS from "../../constants/colors";
+import  { useDispatch } from 'react-redux';
+import { logout } from '@src/app/slices/authSlice';
+import AsyncStorageService from '@src/services/AsyncStorageService';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    AsyncStorageService.clearAll();
+  }
+
   const tabScreenOptions = ({ route }) => ({
     headerShown: true,
     tabBarStyle: {
@@ -39,8 +49,7 @@ export default function TabNavigator() {
         component={Home}
         options={({ navigation, route }) => ({
           ...options,
-          header: (props) => <Header navigation={navigation} title="Home" />,
-          headerShown: false,
+          header: (props) => <Header handlePress={handleLogout} title="Logout" />,
           tabBarLabel: "Home",
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -62,7 +71,7 @@ export default function TabNavigator() {
         options={({ navigation, route }) => ({
           ...options,
           header: (props) => (
-            <Header navigation={navigation} title="ACCESS CONTROL" />
+            <Header handlePress={() => navigation.goBack()} title="ACCESS CONTROL" />
           ),
           tabBarLabel: "Access Control",
           tabBarIcon: ({ focused }) => (
@@ -86,7 +95,7 @@ export default function TabNavigator() {
           ...options,
           tabBarLabel: "Access History",
           header: (props) => (
-            <Header navigation={navigation} title="ACCESS HISTORY" />
+            <Header handlePress={() => navigation.goBack()} title="ACCESS HISTORY" />
           ),
           tabBarIcon: ({ focused }) => (
             <Icon
@@ -107,7 +116,7 @@ export default function TabNavigator() {
         component={Profile}
         options={({ navigation, route }) => ({
           ...options,
-          header: (props) => <Header navigation={navigation} title="PROFILE" />,
+          header: (props) => <Header handlePress={() => navigation.goBack()} title="PROFILE" />,
           tabBarLabel: "Profile",
           tabBarIcon: ({ focused }) => (
             <Icon

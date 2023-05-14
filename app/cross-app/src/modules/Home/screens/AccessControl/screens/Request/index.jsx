@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import patientApi from "@src/api/patient";
 import requestApi from "@src/api/request";
@@ -26,6 +32,7 @@ export default function Request() {
     tableHead: ["ID", "NAME", "ACTION"],
     tableData: [],
   });
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const fetchListDoctor = async () => {
     try {
@@ -45,6 +52,12 @@ export default function Request() {
       console.log("error", error);
     }
   };
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await fetchListDoctor();
+    setRefreshing(false);
+  }, []);
 
   const handleUpdateRequest = async (
     patientId,
@@ -83,7 +96,9 @@ export default function Request() {
           doctorName,
           REQUEST_STATUS.ACCEPTED
         ),
-        patientApi.grantAccessToDoctor(user.patientId, doctorId),
+        patientApi.grantAccessToDoctor(user.patientId, doctorId, {
+          proof: user.proof,
+        }),
       ]);
       const permissionGranted = [...user.permissionGranted, doctorId];
       const newUser = { ...user, permissionGranted };
@@ -108,59 +123,69 @@ export default function Request() {
         overlayColor="rgba(0, 0, 0, 0.8)"
         textStyle={styles.spinnerTextStyle}
       />
-
-      <Table borderStyle={styles.tableBorder}>
-        <Row
-          data={tableData.tableHead}
-          style={styles.head}
-          textStyle={styles.text}
-        />
-        {tableData.tableData.length === 0 ? (
-          <TableWrapper style={styles.row}>
-            <Cell textStyle={styles.text} data="No Data"></Cell>
-          </TableWrapper>
-        ) : (
-          tableData.tableData.map((rowData, index) => (
-            <TableWrapper key={index} style={styles.row}>
-              {rowData.map((cellData, cellIndex) => (
-                <Cell
-                  key={cellIndex}
-                  data={
-                    cellIndex != 2 ? (
-                      cellData
-                    ) : (
-                      <View style={styles.btnWrap}>
-                        <TouchableOpacity
-                          onPress={() => handleGrant(rowData[0], rowData[1])}
-                        >
-                          <View style={[styles.btn, styles.btnAccept]}>
-                            <Text style={styles.btnText}>V</Text>
-                          </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() =>
-                            handleUpdateRequest(
-                              user.patiendId,
-                              rowData[0],
-                              rowData[1],
-                              REQUEST_STATUS.REJECTED
-                            )
-                          }
-                        >
-                          <View style={[styles.btn, styles.btnReject]}>
-                            <Text style={styles.btnText}>X</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )
-                  }
-                  textStyle={styles.text}
-                />
-              ))}
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+        <Table borderStyle={styles.tableBorder}>
+          <Row
+            data={tableData.tableHead}
+            style={styles.head}
+            textStyle={styles.text}
+          />
+          {tableData.tableData.length === 0 ? (
+            <TableWrapper style={styles.row}>
+              <Cell textStyle={styles.text} data="No Data"></Cell>
             </TableWrapper>
-          ))
-        )}
-      </Table>
+          ) : (
+            tableData.tableData.map((rowData, index) => (
+              <TableWrapper key={index} style={styles.row}>
+                {rowData.map((cellData, cellIndex) => (
+                  <Cell
+                    key={cellIndex}
+                    data={
+                      cellIndex != 2 ? (
+                        cellData
+                      ) : (
+                        <View style={styles.btnWrap}>
+                          <TouchableOpacity
+                            onPress={() => handleGrant(rowData[0], rowData[1])}
+                          >
+                            <View style={[styles.btn, styles.btnAccept]}>
+                              <Text style={styles.btnText}>V</Text>
+                            </View>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() =>
+                              handleUpdateRequest(
+                                user.patiendId,
+                                rowData[0],
+                                rowData[1],
+                                REQUEST_STATUS.REJECTED
+                              )
+                            }
+                          >
+                            <View style={[styles.btn, styles.btnReject]}>
+                              <Text style={styles.btnText}>X</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )
+                    }
+                    textStyle={styles.text}
+                  />
+                ))}
+              </TableWrapper>
+            ))
+          )}
+        </Table>
+      </ScrollView>
     </View>
   );
 }

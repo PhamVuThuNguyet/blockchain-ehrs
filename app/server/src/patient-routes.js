@@ -7,7 +7,7 @@
 // Bring common classes into scope, and Fabric SDK network class
 const { ROLE_ADMIN, ROLE_DOCTOR, ROLE_PATIENT, capitalize, getMessage, validateRole } = require('../utils.js');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
-
+const { verifyProof, generateInput, generateProof, generateRandomPrime } = require('./utils/zokrate.js');
 
 /**
  * @param  {Request} req Role in the header and patientId in the url
@@ -22,8 +22,15 @@ exports.getPatientById = async (req, res) => {
     // Set up and connect to Fabric Gateway
     const networkObj = await network.connectToNetwork(req.headers.username);
     // Invoke the smart contract function
-    const response = await network.invoke(networkObj, true, capitalize(userRole) + 'Contract:readPatient', patientId);
-    (response.error) ? res.status(400).send(response.error) : res.status(200).send(JSON.parse(response));
+    let response = await network.invoke(networkObj, true, capitalize(userRole) + 'Contract:readPatient', patientId);
+    if(!response.error) {
+        response = JSON.parse(response);
+        const randomPrime = generateRandomPrime();
+        const { _, __, modulus } = await generateInput(response.privateKey, randomPrime);
+        const proof = await generateProof(modulus, response.privateKey, randomPrime);
+        response.proof = proof;
+    }
+    (response.error) ? res.status(400).send(response.error) : res.status(200).send(response);
 };
 
 /**
@@ -95,6 +102,12 @@ exports.grantAccessToDoctor = async (req, res) => {
     const doctorId = req.params.doctorId;
     let args = { patientId: patientId, doctorId: doctorId };
     args = [JSON.stringify(args)];
+    const { verificationKey, proof } = req.body.proof;
+    const isValidProof = await verifyProof(verificationKey, proof);
+    if(!isValidProof) {
+        res.sendStatus(403);
+        return;
+    }
     // Set up and connect to Fabric Gateway
     const networkObj = await network.connectToNetwork(req.headers.username);
     // Invoke the smart contract function
@@ -114,6 +127,12 @@ exports.revokeAccessFromDoctor = async (req, res) => {
     const doctorId = req.params.doctorId;
     let args = { patientId: patientId, doctorId: doctorId };
     args = [JSON.stringify(args)];
+    const { verificationKey, proof } = req.body.proof;
+    const isValidProof = await verifyProof(verificationKey, proof);
+    if(!isValidProof) {
+        res.sendStatus(403);
+        return;
+    }
     // Set up and connect to Fabric Gateway
     const networkObj = await network.connectToNetwork(req.headers.username);
     // Invoke the smart contract function

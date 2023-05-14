@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles";
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import doctorApi from "@src/api/doctor";
 import patientApi from "@src/api/patient";
@@ -20,6 +26,7 @@ export default function Revoke() {
     tableHead: ["ID", "NAME", "ACTION"],
     tableData: [],
   });
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const sendNotification = async (patientId, doctorName) => {
     let content = `You has been revoked access control EHRs from doctor ${doctorName}`;
@@ -55,11 +62,19 @@ export default function Revoke() {
     }
   };
 
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await fetchListDoctor();
+    setRefreshing(false);
+  }, []);
+
   const handleRevoke = async (doctorId, doctorName) => {
     try {
       setIsLoading(true);
       await Promise.allSettled([
-        patientApi.revokeAccessFromDoctor(user.patientId, doctorId),
+        patientApi.revokeAccessFromDoctor(user.patientId, doctorId, {
+          proof: user.proof,
+        }),
         sendNotification(user.patientId, doctorName),
       ]);
       const permissionGranted = user.permissionGranted.filter(
@@ -87,44 +102,52 @@ export default function Revoke() {
         overlayColor="rgba(0, 0, 0, 0.8)"
         textStyle={styles.spinnerTextStyle}
       />
-      <Table borderStyle={styles.tableBorder}>
-        <Row
-          data={tableData.tableHead}
-          style={styles.head}
-          textStyle={styles.text}
-        />
-        {tableData.tableData.length === 0 ? (
-          <TableWrapper style={styles.row}>
-            <Cell textStyle={styles.text} data="No Data"></Cell>
-          </TableWrapper>
-        ) : (
-          tableData.tableData.map((rowData, index) => (
-            <TableWrapper key={index} style={styles.row}>
-              {rowData.map((cellData, cellIndex) => (
-                <Cell
-                  key={cellIndex}
-                  data={
-                    cellIndex != 2 ? (
-                      cellData
-                    ) : (
-                      <View style={styles.btnWrap}>
-                        <TouchableOpacity
-                          onPress={() => handleRevoke(rowData[0], rowData[1])}
-                        >
-                          <View style={[styles.btn, styles.btnReject]}>
-                            <Text style={styles.btnText}>X</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )
-                  }
-                  textStyle={styles.text}
-                />
-              ))}
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Table borderStyle={styles.tableBorder}>
+          <Row
+            data={tableData.tableHead}
+            style={styles.head}
+            textStyle={styles.text}
+          />
+          {tableData.tableData.length === 0 ? (
+            <TableWrapper style={styles.row}>
+              <Cell textStyle={styles.text} data="No Data"></Cell>
             </TableWrapper>
-          ))
-        )}
-      </Table>
+          ) : (
+            tableData.tableData.map((rowData, index) => (
+              <TableWrapper key={index} style={styles.row}>
+                {rowData.map((cellData, cellIndex) => (
+                  <Cell
+                    key={cellIndex}
+                    data={
+                      cellIndex != 2 ? (
+                        cellData
+                      ) : (
+                        <View style={styles.btnWrap}>
+                          <TouchableOpacity
+                            onPress={() => handleRevoke(rowData[0], rowData[1])}
+                          >
+                            <View style={[styles.btn, styles.btnReject]}>
+                              <Text style={styles.btnText}>X</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )
+                    }
+                    textStyle={styles.text}
+                  />
+                ))}
+              </TableWrapper>
+            ))
+          )}
+        </Table>
+      </ScrollView>
     </View>
   );
 }

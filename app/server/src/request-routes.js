@@ -19,7 +19,7 @@ exports.requestToDoctor = async (req, res) => {
         const userId = hospitalId === 1 ? 'hosp1admin' : 'hosp2admin';
         const networkObj = await network.connectToNetwork(userId);
         const user = JSON.parse(await network.invoke(networkObj, true, capitalize(userRole) + 'Contract:readPatient', patientId));
-        if(user.permissionGranted.includes(doctorId)) {
+        if(user.permissionGranted && user.permissionGranted.includes(doctorId)) {
             res.status(400).send('Already grant');
             return;
         }
@@ -51,7 +51,6 @@ exports.getRequestOfPatient = async (req, res) => {
 exports.updateRequestStatus = async (req, res) => {
     try {
         const { patientId, doctorId, status } = req.body;
-        console.log(patientId, doctorId, status);
         const isExisted = await Request.findOne({ patientId, 'doctor.id': doctorId, status: REQUEST_STATUS.PENDING });
         if (!isExisted) {
             res.status(400).send('Request is not exist');

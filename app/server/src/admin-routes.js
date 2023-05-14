@@ -8,6 +8,7 @@
 const { ROLE_ADMIN, ROLE_DOCTOR, capitalize, getMessage, validateRole, createRedisClient } = require('../utils.js');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
 const pinata = require('./utils/pinata');
+const Request = require('./models/Request.model.js');
 
 /**
  * @param  {Request} req Body must be a patient json and role in the header
@@ -55,20 +56,20 @@ exports.createPatient = async (req, res) => {
     const registerUserRes = await network.registerUser(userData);
     if (registerUserRes.error) {
         const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
+        response.error ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
 
     let args = {
         patientAddress: registerUserRes[0],
         tokenId: index.toString(),
-        tokenURI: pinataData.IpfsHash
-    }
+        tokenURI: pinataData.IpfsHash,
+    };
 
     const mintNFTRes = await network.invoke(networkObj, false, 'TokenERC721Contract:mint', JSON.stringify(args));
     if (mintNFTRes.error) {
         const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
+        response.error ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
 
@@ -79,9 +80,19 @@ exports.createPatient = async (req, res) => {
     const createPatientRes = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:createPatient', final_data);
     if (createPatientRes.error) {
         const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:deletePatient', req.body.patientId);
-        (response.error) ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
+        response.error ? res.status(500).send(response.error) : res.status(500).send(registerUserRes.error);
         return;
     }
+
+    const hospitalId = 1;
+    const doctorId = 'HOSP1-DOC0';
+    const response = await network.getAllDoctorsByHospitalId(networkObj, hospitalId);
+    const doctor = response.find((item) => item.id == doctorId);
+    await Request.create({
+        patientId: req.body.patientId,
+        doctor,
+        hospitalId,
+    });
 
     res.status(201).send(getMessage(false, 'Successfully registered Patient.', req.body.patientId, req.body.password));
 };
