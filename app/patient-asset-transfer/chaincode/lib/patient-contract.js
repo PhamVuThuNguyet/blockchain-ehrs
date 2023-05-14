@@ -137,7 +137,7 @@ class PatientContract extends PrimaryContract {
         for (let i = 0; i < asset.length; i++) {
             const obj = asset[i];
             asset[i] = {
-                patientId: obj.Key,
+                patientId: obj.Record.patientId,
                 citizenId: obj.Record.citizenId,
                 firstName: obj.Record.firstName,
                 lastName: obj.Record.lastName,
@@ -147,6 +147,16 @@ class PatientContract extends PrimaryContract {
                 phoneNumber: obj.Record.phoneNumber,
                 emergPhoneNumber: obj.Record.emergPhoneNumber,
                 bloodGroup: obj.Record.bloodGroup,
+                ehr: obj.Record.ehr,
+                publicKey: obj.Record.publicKey,
+                privateKey: obj.Record.privateKey,
+                chiefComplaint: obj.Record.chiefComplaint,
+                HPI: obj.Record.HPI,
+                PMH: obj.Record.PMH,
+                physicalExamination: obj.Record.physicalExamination,
+                paraclinicalTests: obj.Record.paraclinicalTests,
+                diagnosis: obj.Record.diagnosis,
+                treatment: obj.Record.treatment,
             };
             if (includeTimeStamp) {
                 asset[i].changedBy = obj.Record.changedBy;

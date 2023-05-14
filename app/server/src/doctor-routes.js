@@ -7,7 +7,7 @@
 // Bring common classes into scope, and Fabric SDK network class
 const { ROLE_DOCTOR, capitalize, getMessage, validateRole } = require('../utils.js');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
-
+const pinata = require('./utils/pinata');
 
 /**
  * @param  {Request} req Body must be a json, role in the header and patientId in the url
@@ -21,6 +21,14 @@ exports.updatePatientMedicalDetails = async (req, res) => {
     let args = req.body;
     args.patientId = req.params.patientId;
     args.changedBy = req.headers.username;
+    args.Timestamp = new Date();
+
+    const data = JSON.stringify(args);
+
+    const pinataData = await pinata.upload(data, 'patient');
+    const ipfsHash = pinataData.IpfsHash;
+    args.ehr = ipfsHash
+
     args = [JSON.stringify(args)];
     // Set up and connect to Fabric Gateway
     const networkObj = await network.connectToNetwork(req.headers.username);

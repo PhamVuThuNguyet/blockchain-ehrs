@@ -22,12 +22,6 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
     new DisplayVal(PatientViewRecord.prototype.Timestamp, 'Date'),
     new DisplayVal(PatientViewRecord.prototype.changedBy, 'Last changed by'),
     new DisplayVal(PatientViewRecord.prototype.patientId, 'Patient Id'),
-    new DisplayVal(PatientViewRecord.prototype.citizenId, 'Citizen Id'),
-    new DisplayVal(PatientViewRecord.prototype.firstName, 'First Name'),
-    new DisplayVal(PatientViewRecord.prototype.lastName, 'Last Name'),
-    new DisplayVal(PatientViewRecord.prototype.sex, 'Sex'),
-    new DisplayVal(PatientViewRecord.prototype.birth, 'Birth'),
-    new DisplayVal(PatientViewRecord.prototype.bloodGroup, 'Blood Group'),
   ];
 
   constructor(
@@ -39,6 +33,18 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.isPatient()) {
       this.headerNames.push(
+        new DisplayVal(PatientViewRecord.prototype.citizenId, 'Citizen Id')
+      );
+    }
+    this.headerNames.push(
+      new DisplayVal(PatientViewRecord.prototype.firstName, 'First Name'),
+      new DisplayVal(PatientViewRecord.prototype.lastName, 'Last Name'),
+      new DisplayVal(PatientViewRecord.prototype.bloodGroup, 'Blood Group'),
+    );
+    if (this.isPatient()) {
+      this.headerNames.push(
+        new DisplayVal(PatientViewRecord.prototype.sex, 'Sex'),
+        new DisplayVal(PatientViewRecord.prototype.birth, 'Birth'),
         new DisplayVal(PatientViewRecord.prototype.address, 'Address'),
         new DisplayVal(
           PatientViewRecord.prototype.phoneNumber,
@@ -54,7 +60,26 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
         'Emergency phone number'
       ),
       new DisplayVal(PatientViewRecord.prototype.publicKey, 'Public Key'),
-      new DisplayVal(PatientViewRecord.prototype.ehr, 'EHR IPFS hash')
+      new DisplayVal(PatientViewRecord.prototype.ehr, 'EHR IPFS hash'),
+      new DisplayVal(
+        PatientViewRecord.prototype.chiefComplaint,
+        'Chief Complaint'
+      ),
+      new DisplayVal(PatientViewRecord.prototype.HPI, 'HPI'),
+      new DisplayVal(PatientViewRecord.prototype.PMH, 'PMH'),
+      new DisplayVal(
+        PatientViewRecord.prototype.physicalExamination,
+        'Physical Examination'
+      ),
+      new DisplayVal(
+        PatientViewRecord.prototype.paraclinicalTests,
+        'Paraclinical Tests'
+      ),
+      new DisplayVal(PatientViewRecord.prototype.diagnosis, 'Diagnosis'),
+      new DisplayVal(
+        PatientViewRecord.prototype.treatment,
+        'Recommended Treatment'
+      )
     );
     this.sub = this.route.params.subscribe((params: Params) => {
       this.patientID = params.patientId;

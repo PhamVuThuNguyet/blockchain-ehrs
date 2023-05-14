@@ -24,7 +24,7 @@ class DoctorContract extends AdminContract {
         const doctorId = await this.getClientId(ctx);
         // Check if doctor has the permission to read the patient
         const permissionArray = asset.permissionGranted;
-        if(!permissionArray.includes(doctorId)) {
+        if (!permissionArray.includes(doctorId)) {
             throw new Error(`The doctor ${doctorId} does not have permission to patient ${patientId}`);
         }
         asset = ({
@@ -40,6 +40,13 @@ class DoctorContract extends AdminContract {
             bloodGroup: asset.bloodGroup,
             ehr: asset.ehr,
             publicKey: asset.publicKey,
+            chiefComplaint: asset.chiefComplaint,
+            HPI: asset.HPI,
+            PMH: asset.PMH,
+            physicalExamination: asset.physicalExamination,
+            paraclinicalTests: asset.paraclinicalTests,
+            diagnosis: asset.diagnosis,
+            treatment: asset.treatment,
         });
         return asset;
     }
@@ -49,36 +56,66 @@ class DoctorContract extends AdminContract {
         args = JSON.parse(args);
         let isDataChanged = false;
         let patientId = args.patientId;
-        let newSymptoms = args.symptoms;
-        let newDiagnosis = args.diagnosis;
-        let newTreatment = args.treatment;
-        let newFollowUp = args.followUp;
+        let newChiefComplaint = args.chiefComplaint;
+        let HPI = args.HPI;
+        let PMH = args.PMH;
+        let physicalExamination = args.physicalExamination;
+        let paraclinicalTests = args.paraclinicalTests;
+        let diagnosis = args.diagnosis;
+        let treatment = args.treatment;
         let updatedBy = args.changedBy;
+        let ehr = args.ehr;
+        let Timestamp = args.Timestamp;
 
         const patient = await PrimaryContract.prototype.readPatient(ctx, patientId);
 
-        if (newSymptoms !== null && newSymptoms !== '' && patient.symptoms !== newSymptoms) {
-            patient.symptoms = newSymptoms;
+        if (newChiefComplaint !== null && newChiefComplaint !== '' && patient.chiefComplaint !== newChiefComplaint) {
+            patient.chiefComplaint = newChiefComplaint;
             isDataChanged = true;
         }
 
-        if (newDiagnosis !== null && newDiagnosis !== '' && patient.diagnosis !== newDiagnosis) {
-            patient.diagnosis = newDiagnosis;
+        if (HPI !== null && HPI !== '' && patient.HPI !== HPI) {
+            patient.HPI = HPI;
             isDataChanged = true;
         }
 
-        if (newTreatment !== null && newTreatment !== '' && patient.treatment !== newTreatment) {
-            patient.treatment = newTreatment;
+        if (PMH !== null && PMH !== '' && patient.PMH !== PMH) {
+            patient.PMH = PMH;
             isDataChanged = true;
         }
 
-        if (newFollowUp !== null && newFollowUp !== '' && patient.followUp !== newFollowUp) {
-            patient.followUp = newFollowUp;
+        if (physicalExamination !== null && physicalExamination !== '' && patient.physicalExamination !== physicalExamination) {
+            patient.physicalExamination = physicalExamination;
+            isDataChanged = true;
+        }
+
+        if (paraclinicalTests !== null && paraclinicalTests !== '' && patient.paraclinicalTests !== paraclinicalTests) {
+            patient.paraclinicalTests = paraclinicalTests;
+            isDataChanged = true;
+        }
+
+        if (diagnosis !== null && diagnosis !== '' && patient.diagnosis !== diagnosis) {
+            patient.diagnosis = diagnosis;
+            isDataChanged = true;
+        }
+
+        if (treatment !== null && treatment !== '' && patient.treatment !== treatment) {
+            patient.treatment = treatment;
             isDataChanged = true;
         }
 
         if (updatedBy !== null && updatedBy !== '') {
             patient.changedBy = updatedBy;
+        }
+
+        if (ehr !== null && ehr !== '' && patient.ehr !== ehr) {
+            patient.ehr = ehr;
+            isDataChanged = true;
+        }
+
+        if (Timestamp !== null && Timestamp !== '') {
+            patient.Timestamp = Timestamp;
+            isDataChanged = true;
         }
 
         if (isDataChanged === false) return;
@@ -124,16 +161,20 @@ class DoctorContract extends AdminContract {
         for (let i = 0; i < asset.length; i++) {
             const obj = asset[i];
             asset[i] = {
-                patientId: obj.Key,
+                patientId: obj.Record.patientId,
                 firstName: obj.Record.firstName,
                 lastName: obj.Record.lastName,
-                age: obj.Record.age,
+                emergPhoneNumber: obj.Record.emergPhoneNumber,
                 bloodGroup: obj.Record.bloodGroup,
-                allergies: obj.Record.allergies,
-                symptoms: obj.Record.symptoms,
+                publicKey: obj.Record.publicKey,
+                ehr: obj.Record.ehr,
+                chiefComplaint: obj.Record.chiefComplaint,
+                HPI: obj.Record.HPI,
+                PMH: obj.Record.PMH,
+                physicalExamination: obj.Record.physicalExamination,
+                paraclinicalTests: obj.Record.paraclinicalTests,
                 diagnosis: obj.Record.diagnosis,
                 treatment: obj.Record.treatment,
-                followUp: obj.Record.followUp
             };
             if (includeTimeStamp) {
                 asset[i].changedBy = obj.Record.changedBy;

@@ -48,7 +48,14 @@ class PrimaryContract extends Contract {
             pwdTemp: asset.pwdTemp,
             ehr: asset.ehr,
             publicKey: asset.publicKey,
-            privateKey: asset.privateKey
+            privateKey: asset.privateKey,
+            chiefComplaint: asset.chiefComplaint,
+            HPI: asset.HPI,
+            PMH: asset.PMH,
+            physicalExamination: asset.physicalExamination,
+            paraclinicalTests: asset.paraclinicalTests,
+            diagnosis: asset.diagnosis,
+            treatment: asset.treatment,
         });
         return asset;
     }

@@ -130,6 +130,16 @@ export class PatientDoctorViewRecord {
   bloodGroup = '';
   publicKey = '';
   ehr = '';
+  chiefComplaint = '';
+  HPI = '';
+  PMH = '';
+  physicalExamination = '';
+  paraclinicalTests = '';
+  diagnosis = '';
+  treatment = '';
+  docType = '';
+  changedBy = '';
+  Timestamp = '';
 
   constructor(readonly patientRecord: PatientRecord) {
     this.patientId = patientRecord.patientId;
@@ -144,6 +154,17 @@ export class PatientDoctorViewRecord {
     this.bloodGroup = patientRecord.bloodGroup;
     this.publicKey = patientRecord.publicKey;
     this.ehr = patientRecord.ehr;
+    this.chiefComplaint = patientRecord.chiefComplaint;
+    this.HPI = patientRecord.HPI;
+    this.PMH = patientRecord.PMH;
+    this.physicalExamination = patientRecord.physicalExamination;
+    this.paraclinicalTests = patientRecord.paraclinicalTests;
+    this.diagnosis = patientRecord.diagnosis;
+    this.treatment = patientRecord.treatment;
+    this.changedBy = patientRecord.changedBy;
+    this.Timestamp = patientRecord.Timestamp
+      ? new Date(patientRecord.Timestamp.seconds.low * 1000).toDateString()
+      : '';
   }
 }
 
