@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import styles from './styles';
 import { NavigationContext } from '@react-navigation/native';
 
-export default function NormalHeader({ title = '' }) {
+export default function NormalHeader({ title = '', handlePress }) {
   const navigation = useContext(NavigationContext);
 
   return (
@@ -18,7 +18,7 @@ export default function NormalHeader({ title = '' }) {
             padding: 4,
           }}
           size={24}
-          onPress={() => navigation.goBack()}
+          onPress={handlePress}
         />
         <Text style={styles.fullname}>{title}</Text>
       </View>
