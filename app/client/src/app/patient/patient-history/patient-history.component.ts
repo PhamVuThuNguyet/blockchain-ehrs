@@ -102,6 +102,6 @@ export class PatientHistoryComponent implements OnInit, OnDestroy {
   }
 
   public convertToDate(val: any): string {
-    return new Date(val.seconds.low * 1000).toDateString();
+    return new Date(val.seconds * 1000).toDateString();
   }
 }

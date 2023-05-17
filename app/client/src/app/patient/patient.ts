@@ -33,6 +33,7 @@ export interface PatientRecord {
   docType: string;
   changedBy: string;
   Timestamp: Timestamp;
+  proof: Object
 }
 
 export class PatientViewRecord {
