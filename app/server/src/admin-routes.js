@@ -9,6 +9,7 @@ const { ROLE_ADMIN, ROLE_DOCTOR, capitalize, getMessage, validateRole, createRed
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
 const pinata = require('./utils/pinata');
 const Request = require('./models/Request.model.js');
+const cryptography = require('./utils/cryptography');
 
 /**
  * @param  {Request} req Body must be a patient json and role in the header
@@ -43,7 +44,18 @@ exports.createPatient = async (req, res) => {
     // The request present in the body is converted into a single json string
     const data = JSON.stringify(req.body);
 
-    const pinataData = await pinata.upload(data, 'patient');
+    const [seal, context] = await cryptography.createSealAndContext();
+    const keychain = await cryptography.loadKeys();
+    const [encryptedLength, encryptedData] = await cryptography.createCipherText(data);
+
+    const data64 = encryptedData.save();
+
+    const dataUpload = {
+        data: data64,
+        length: encryptedLength
+    }
+
+    const pinataData = await pinata.upload(JSON.stringify(dataUpload), 'patient');
     let final_data = req.body;
     final_data.ipfsHash = pinataData.IpfsHash;
 
