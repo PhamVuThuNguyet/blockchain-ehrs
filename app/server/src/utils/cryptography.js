@@ -1,6 +1,7 @@
 const SEAL = require('node-seal');
+const fs = require('fs');
 
-function stringToUint32Array(str) {
+const stringToUint32Array = (str) => {
     const uint32Array = new Uint32Array(str.length - 1);
 
     for (let i = 1; i < str.length - 1; i++) {
@@ -12,7 +13,7 @@ function stringToUint32Array(str) {
     return [str.length, uint32Array];
 }
 
-async function createContext(seal) {
+const createContext = async (seal) => {
     const schemeType = seal.SchemeType.bfv
     const securityLevel = seal.SecurityLevel.tc128
     const polyModulusDegree = 8192
@@ -51,11 +52,37 @@ async function createContext(seal) {
     return context;
 }
 
-async function generateKeys(context, seal) {
+const generateKeys = async (context, seal) => {
     // Create a new KeyGenerator (creates a new keypair internally)
     const keyGenerator = seal.KeyGenerator(context)
     const secretKey = keyGenerator.secretKey()
     const publicKey = keyGenerator.createPublicKey()
+    const galoisKeys = keyGenerator.createGaloisKeys()
+
+    return {
+        secretKey: secretKey,
+        publicKey: publicKey,
+        galoisKeys: galoisKeys
+    }
+}
+
+
+const loadKeys = async () => {
+    const seal = await SEAL();
+    const context = await createContext(seal);
+
+    const secretData = fs.readFileSync('secretKey.txt');
+
+    const secretKey = seal.SecretKey();
+    secretKey.load(context, secretData.toString());
+
+    const publicData = fs.readFileSync('publicKey.txt');
+
+    const publicKey = seal.PublicKey();
+    publicKey.load(context, publicData.toString());
+
+    const keyGenerator = seal.KeyGenerator(context, secretKey, publicKey)
+
     const galoisKeys = keyGenerator.createGaloisKeys()
 
     return {
@@ -74,7 +101,7 @@ async function generateKeys(context, seal) {
  * @param {object} keychain 
  * @returns 
  */
-async function executeHomomorphic(cipherTextPrev, cipherTextPrevLength, text, seal, context, keychain) {
+const executeHomomorphic = async (cipherTextPrev, cipherTextPrevLength, text, seal, context, keychain) => {
     // Create an Evaluator which will allow HE functions to execute
     const evaluator = seal.Evaluator(context)
 
@@ -90,7 +117,11 @@ async function executeHomomorphic(cipherTextPrev, cipherTextPrevLength, text, se
     return [textLength + cipherTextPrevLength, cipherTextD]
 }
 
-async function createCipherText(seal, context, keychain, text) {
+const createCipherText = async (text) => {
+    const seal = await SEAL();
+    const context = await createContext(seal);
+    const keychain = await generateKeys(context, seal);
+
     // Create a BatchEncoder (only BFV SchemeType)
     const batchEncoder = seal.BatchEncoder(context)
 
@@ -109,7 +140,7 @@ async function createCipherText(seal, context, keychain, text) {
     return [textLength, cipherText]
 }
 
-async function decryptCipherText(seal, context, keychain, cipherText) {
+const decryptCipherText = async (seal, context, keychain, cipherText) => {
     // Create a BatchEncoder (only BFV SchemeType)
     const batchEncoder = seal.BatchEncoder(context)
 
@@ -127,7 +158,21 @@ async function decryptCipherText(seal, context, keychain, cipherText) {
     return decoded
 }
 
-async function homomorphicEncryption(stringA, stringB) {
+const createKeyPair = async () => {
+    const seal = await SEAL();
+    const context = await createContext(seal);
+    const keychain = await generateKeys(context, seal);
+    return keychain;
+}
+
+const createSealAndContext = async () => {
+    const seal = await SEAL();
+    const context = await createContext(seal);
+
+    return [seal, context];
+}
+
+const homomorphicEncryption = async (stringA, stringB) => {
 
     const seal = await SEAL();
     const context = await createContext(seal);
@@ -151,38 +196,49 @@ async function homomorphicEncryption(stringA, stringB) {
     console.log('decoded concatenated text: ', JSON.parse(JSON.stringify("{" + dec.decode(new Uint8Array(decoded.buffer)) + "}")))
 }
 
-const data = {
-    'PID': {
-        'patientName': 'John Doe',
-        'patientId': '12345',
-        'patientAddress': '123 Main St',
-        'patientPhone': '555-555-5555'
-    },
-    'OBR': {
-        'testName': 'Blood Test',
-        'testDate': '2023-05-01',
-        'testResults': {
-            'Glucose': '120',
-            'Cholesterol': '200',
-            'HDL': '60',
-            'LDL': '130'
-        }
-    },
-}
-const addData = {
-    'OBR': {
-        'testName': 'Blood Test',
-        'testDate': '2023-05-01',
-        'testResults': {
-            'Glucose': '120',
-            'Cholesterol': '200',
-            'HDL': '60',
-            'LDL': '130'
-        }
-    }
-}
-    
-const stringA = JSON.stringify(data)
-const stringB = JSON.stringify(addData)
+// const data = {
+//     'PID': {
+//         'patientName': 'John Doe',
+//         'patientId': '12345',
+//         'patientAddress': '123 Main St',
+//         'patientPhone': '555-555-5555'
+//     },
+//     'OBR': {
+//         'testName': 'Blood Test',
+//         'testDate': '2023-05-01',
+//         'testResults': {
+//             'Glucose': '120',
+//             'Cholesterol': '200',
+//             'HDL': '60',
+//             'LDL': '130'
+//         }
+//     },
+// }
+// const addData = {
+//     'OBR': {
+//         'testName': 'Blood Test',
+//         'testDate': '2023-05-01',
+//         'testResults': {
+//             'Glucose': '120',
+//             'Cholesterol': '200',
+//             'HDL': '60',
+//             'LDL': '130'
+//         }
+//     }
+// }
 
-homomorphicEncryption(stringA, stringB);
+// const stringA = JSON.stringify(data)
+// const stringB = JSON.stringify(addData)
+
+// homomorphicEncryption(stringA, stringB);
+
+module.exports = {
+    homomorphicEncryption,
+    executeHomomorphic,
+    decryptCipherText,
+    createCipherText,
+    createContext,
+    createKeyPair,
+    createSealAndContext,
+    loadKeys
+};

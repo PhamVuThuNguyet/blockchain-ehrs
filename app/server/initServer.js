@@ -5,10 +5,11 @@
  **/
 
 const fs = require('fs');
-const {enrollAdminHosp1} = require('./enrollAdmin-Hospital1');
-const {enrollAdminHosp2} = require('./enrollAdmin-Hospital2');
-const {enrollRegisterUser} = require('./registerUser');
-const {createRedisClient} = require('./utils');
+const { enrollAdminHosp1 } = require('./enrollAdmin-Hospital1');
+const { enrollAdminHosp2 } = require('./enrollAdmin-Hospital2');
+const { enrollRegisterUser } = require('./registerUser');
+const { createRedisClient } = require('./utils');
+const cryptography = require('./src/utils/cryptography');
 
 const redis = require('redis');
 
@@ -22,8 +23,8 @@ async function initLedger() {
     const patients = JSON.parse(jsonString);
     let i = 0;
     for (i = 0; i < patients.length; i++) {
-      const attr = {firstName: patients[i].firstName, lastName: patients[i].lastName, role: 'patient'};
-      await enrollRegisterUser('1', 'PID'+i, JSON.stringify(attr));
+      const attr = { firstName: patients[i].firstName, lastName: patients[i].lastName, role: 'patient' };
+      await enrollRegisterUser('1', 'PID' + i, JSON.stringify(attr));
     }
   } catch (err) {
     console.log(err);
@@ -58,7 +59,7 @@ async function enrollAndRegisterDoctors() {
     const jsonString = fs.readFileSync('./initDoctors.json');
     const doctors = JSON.parse(jsonString);
     for (let i = 0; i < doctors.length; i++) {
-      const attr = {firstName: doctors[i].firstName, lastName: doctors[i].lastName, role: 'doctor', speciality: doctors[i].speciality};
+      const attr = { firstName: doctors[i].firstName, lastName: doctors[i].lastName, role: 'doctor', speciality: doctors[i].speciality };
       // Create a redis client and add the doctor to redis
       doctors[i].hospitalId = parseInt(doctors[i].hospitalId);
       const redisClient = createRedisClient(doctors[i].hospitalId);
@@ -71,6 +72,40 @@ async function enrollAndRegisterDoctors() {
   }
 };
 
+async function createCryptoKey() {
+  const keychain = await cryptography.createKeyPair();
+  const secretKey = keychain.secretKey.save();
+  const publicKey = keychain.publicKey.save();
+  const galoisKeys = keychain.galoisKeys.save();
+
+  fs.writeFile("secretKey.txt", secretKey, 'utf8', function (err) {
+    if (err) {
+      console.log("An error occured while writing keychain to file.");
+      return console.log(err);
+    }
+
+    console.log("TXT key file has been saved.");
+  });
+
+  fs.writeFile("publicKey.txt", publicKey, 'utf8', function (err) {
+    if (err) {
+      console.log("An error occured while writing keychain to file.");
+      return console.log(err);
+    }
+
+    console.log("TXT key file has been saved.");
+  });
+
+  fs.writeFile("galoisKeys.txt", galoisKeys, 'utf8', function (err) {
+    if (err) {
+      console.log("An error occured while writing keychain to file.");
+      return console.log(err);
+    }
+
+    console.log("TXT key file has been saved.");
+  });
+}
+
 /**
  * @description Function to initialise the backend server, enrolls and regsiter the admins and initLedger patients.
  * @description Need not run this manually, included as a prestart in package.json
@@ -81,6 +116,7 @@ async function main() {
   await initLedger();
   await initRedis();
   await enrollAndRegisterDoctors();
+  await createCryptoKey();
 }
 
 
