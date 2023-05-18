@@ -30,6 +30,10 @@ export class PatientComponent implements OnInit, OnDestroy {
       .subscribe((params: Params) => {
         this.patientID = params.patientId;
         this.refresh();
+        this.patientService.getPatientByKey(this.patientID)
+          .subscribe(res => {
+            if(res.proof) localStorage.setItem('PROOF', JSON.stringify(res.proof));
+          });
       });
   }
 

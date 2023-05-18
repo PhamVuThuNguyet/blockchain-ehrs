@@ -37,10 +37,16 @@ export class PatientService {
   }
 
   public grantAccessToDoctor(patientId: string, doctorId: string): Observable<any> {
-    return this.http.patch(this.patientURL + `/${patientId}/grant/${doctorId}`, {});
+    const proof = localStorage.getItem('PROOF') || '{}';
+    return this.http.patch(this.patientURL + `/${patientId}/grant/${doctorId}`, {
+      proof: JSON.parse(proof)
+    });
   }
 
   public revokeAccessFromDoctor(patientId: string, doctorId: string): Observable<any> {
-    return this.http.patch(this.patientURL + `/${patientId}/revoke/${doctorId}`, {});
+    const proof = localStorage.getItem('PROOF') || '{}';
+    return this.http.patch(this.patientURL + `/${patientId}/revoke/${doctorId}`, {
+      proof: JSON.parse(proof)
+    });
   }
 }
