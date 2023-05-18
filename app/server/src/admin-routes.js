@@ -44,8 +44,6 @@ exports.createPatient = async (req, res) => {
     // The request present in the body is converted into a single json string
     const data = JSON.stringify(req.body);
 
-    const [seal, context] = await cryptography.createSealAndContext();
-    const keychain = await cryptography.loadKeys();
     const [encryptedLength, encryptedData] = await cryptography.createCipherText(data);
 
     const data64 = encryptedData.save();

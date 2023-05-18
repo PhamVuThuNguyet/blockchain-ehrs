@@ -8,6 +8,7 @@
 const { ROLE_DOCTOR, capitalize, getMessage, validateRole } = require('../utils.js');
 const network = require('../../patient-asset-transfer/application-javascript/app.js');
 const pinata = require('./utils/pinata');
+const cryptography = require('./utils/cryptography');
 
 /**
  * @param  {Request} req Body must be a json, role in the header and patientId in the url
@@ -25,7 +26,17 @@ exports.updatePatientMedicalDetails = async (req, res) => {
 
     const data = JSON.stringify(args);
 
-    const pinataData = await pinata.upload(data, 'patient');
+    const [encryptedLength, encryptedData] = await cryptography.createCipherText(data);
+
+    const data64 = encryptedData.save();
+
+    const dataUpload = {
+        data: data64,
+        length: encryptedLength
+    }
+
+
+    const pinataData = await pinata.upload(JSON.stringify(dataUpload), 'patient');
     const ipfsHash = pinataData.IpfsHash;
     args.ehr = ipfsHash
 
