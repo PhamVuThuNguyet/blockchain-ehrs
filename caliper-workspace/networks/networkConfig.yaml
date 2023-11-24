@@ -1,0 +1,23 @@
+name: Caliper test
+version: "2.0.0"
+
+caliper:
+  blockchain: fabric
+
+channels:
+  - channelName: hospitalchannel
+    contracts:
+      - id: basic
+
+organizations:
+  - mspid: Hosp1MSP
+    identities:
+      certificates:
+        - name: "Admin"
+          clientPrivateKey:
+            path: "../app/first-network/organizations/peerOrganizations/hosp1.neuralmed.com/users/Admin@hosp1.neuralmed.com/msp/keystore/eb79a825dbdcc4dc6c4384b58cc9eea9c2b841400968b3b3dd0d03224ca7dc74_sk"
+          clientSignedCert:
+            path: "../app/first-network/organizations/peerOrganizations/hosp1.neuralmed.com/users/Admin@hosp1.neuralmed.com/msp/signcerts/cert.pem"
+    connectionProfile:
+      path: "../app/first-network/organizations/peerOrganizations/hosp1.neuralmed.com/connection-hosp1.yaml"
+      discover: true
