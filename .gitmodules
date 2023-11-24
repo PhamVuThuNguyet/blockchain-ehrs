@@ -1,0 +1,3 @@
+[submodule "app/fabric-operations-console"]
+	path = app/fabric-operations-console
+	url = https://github.com/hyperledger-labs/fabric-operations-console
